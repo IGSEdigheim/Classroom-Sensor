@@ -32,7 +32,8 @@ igs/environment/room1/vol
 
 ## Hardware
 
-#### ESP32: [Doit 30Pin Version:](https://www.aliexpress.com/item/32959541446.html) <img src="https://ae01.alicdn.com/kf/HTB1_cCCac_vK1RkSmRyq6xwupXaM.jpg" width="200">
+#### ESP32: [Doit 30Pin Version:](https://www.aliexpress.com/item/32959541446.html)
+<img src="https://ae01.alicdn.com/kf/HTB1_cCCac_vK1RkSmRyq6xwupXaM.jpg" width="200">
 
 Jeder Pin sollte doppelt auf der Platine sein, so dass jeder Pin verfügbar ist wenn der ESP auf die PLatine gesteckt ist. Diese Buchsen finden Verwendung:
 * Single: https://www.aliexpress.com/item/32970948352.html 
