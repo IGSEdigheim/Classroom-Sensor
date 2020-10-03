@@ -1,6 +1,30 @@
 # Classroom-Sensor
 Sensor on ESP32 with CO2, MEMS
 
+## Software
+
+### Verwendete Arduino Bibliotheken
+
+#### Internet
+* [Wifi](https://www.arduino.cc/en/Reference/WiFi)
+* [WifiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure)
+* Für MQTT: [PubSubClient](https://pubsubclient.knolleary.net/)
+#### Sensoren
+* [MH-Z19 von Jonathan Dempsey](https://github.com/WifWaf/MH-Z19)
+* [Adafruit BME280 Library](https://github.com/adafruit/Adafruit_BME280_Library)
+
+### MQTT-Server
+Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den verschlüsselten Port 8883
+
+#### MQTT-Topics
+igs/environment/deepsleep
+igs/environment/room1/co2
+igs/environment/room1/temp
+igs/environment/room1/hum
+igs/environment/room1/pres
+igs/environment/room1/vol
+
+
 ## Hardware
 
 #### ESP32: [Doit 30Pin Version:](https://www.aliexpress.com/item/32959541446.html) <img src="https://ae01.alicdn.com/kf/HTB1_cCCac_vK1RkSmRyq6xwupXaM.jpg" width="200">
@@ -16,6 +40,7 @@ Sensoren / Aktoren
 
 #### Umweltsensor [BME680](https://www.aliexpress.com/item/4000049700826.html)
 <img src="https://ae01.alicdn.com/kf/H9966c391bc334a649263d5f16d010e0dY.jpg" width="200">
+Derzeit wird noch der BME280 im QUellcode verwendet. Dieser soll durch den neuen BME680 ersetzt werden um auch VOC messen zu können.
 
 #### Helligkeitssensor 
 
