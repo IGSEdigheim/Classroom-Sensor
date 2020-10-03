@@ -18,10 +18,15 @@ Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den
 
 #### MQTT-Topics
 igs/environment/deepsleep
+
 igs/environment/room1/co2
+
 igs/environment/room1/temp
+
 igs/environment/room1/hum
+
 igs/environment/room1/pres
+
 igs/environment/room1/vol
 
 
