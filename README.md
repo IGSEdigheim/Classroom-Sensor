@@ -48,13 +48,14 @@ Sensoren / Aktoren
 Derzeit wird noch der BME280 im QUellcode verwendet. Dieser soll durch den neuen BME680 ersetzt werden um auch VOC messen zu können.
 
 #### Helligkeitssensor 
+**todo**
 
 #### Mikrofon [INMP441](https://www.aliexpress.com/item/32961274528.html)
 <img src="https://ae01.alicdn.com/kf/Hb5534b3132464cae9076f58626cec9fdm.jpg" width="200">
 Zur Lärmpegelmessung. Der Eingang zum Mikrofon ist auf der Unterseite der Platine. 
 
 #### Piezo-Summer 
-
+**todo**
 
 ### Anschlüsse 
 Neben den Anschlüssen für die Sensoren kommen außerdem noch die folgenden Anschlüsse auf die Platine.
