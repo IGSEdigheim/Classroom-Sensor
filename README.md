@@ -15,6 +15,7 @@ Sensor on ESP32 with CO2, MEMS
 
 ### MQTT-Server
 Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den verschlüsselten Port 8883
+Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environment?orgId=1&refresh=5s) betrachtet werden.
 
 #### MQTT-Topics
 igs/environment/deepsleep
