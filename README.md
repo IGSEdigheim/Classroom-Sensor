@@ -18,12 +18,12 @@ Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den
 Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environment?orgId=1&refresh=5s) betrachtet werden.
 
 #### MQTT-Topics
-igs/environment/deepsleep
-igs/environment/room1/co2
-igs/environment/room1/temp
-igs/environment/room1/hum
-igs/environment/room1/pres
-igs/environment/room1/vol
+* igs/environment/deepsleep
+* igs/environment/room1/co2
+* igs/environment/room1/temp
+* igs/environment/room1/hum
+* igs/environment/room1/pres
+* igs/environment/room1/vol
 
 
 ## Hardware
