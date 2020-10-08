@@ -1,6 +1,6 @@
 // Replace the next variables with your SSID/Password combination
 const char* ssid = "wetter";
-const char* password = "‌+?*weTtEr2018*?+";
+const char* password = "";
 
 // TLS
 // mqtt.fadenstrahl.de:/etc/letsencrypt/live/mqtt.fadenstrahl.de/chain.pem
