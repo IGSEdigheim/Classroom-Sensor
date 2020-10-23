@@ -35,8 +35,6 @@ Jeder Pin sollte doppelt auf der Platine sein, so dass jeder Pin verfügbar ist 
 * Single: https://www.aliexpress.com/item/32970948352.html 
 * Double: https://www.aliexpress.com/item/32956866217.html 
 
-Sensoren / Aktoren
-
 #### CO2-Sensor: [MH-Z19](https://www.aliexpress.com/item/4000212024923.html)
 <img src="https://ae01.alicdn.com/kf/H21416e6fddfb46539fdf563d8bf5ec212.jpg" width="200">
 
@@ -54,18 +52,13 @@ Zur Lärmpegelmessung. Der Eingang zum Mikrofon ist auf der Unterseite der Plati
 #### Buzzer 
 Part-No: SEA-12085-16
 
-
-### Anschlüsse 
-Neben den Anschlüssen für die Sensoren kommen außerdem noch die folgenden Anschlüsse auf die Platine.
-
 #### LED-Anschlüsse (6LEDs) 
 Man kann eine RGB-LED oder 3 LEDs mit einem Dupont-Kabel direkt an die Platine anschließen. Das geht mit 7 Pins. (4mal GND)
 Das Ganze zwei Mal. Also 14 Pins. 6 Für die Anoden und 8 mal GND
 
-#### STEMMA-QT 
-Um den Funktionsumfang zu erweitern. Stemma-QT ist ein neuer Standard von Adafruit für I2C mit 4 Pins.
+#### Anschluss für Feinstaubsensor SDS011
+Part-No: XH-5AW
 
-#### Anschluss für Feinstaubsensor SDS011 
 Auf der Platine sollte ein [5-Pin JST-XH Connector](https://www.aliexpress.com/item/4000029760504.html) für den Feinstaubsensor SDS011 am Rand vorhanden sein. 
 
 
