@@ -51,8 +51,9 @@ Derzeit wird noch der BME280 im QUellcode verwendet. Dieser soll durch den neuen
 <img src="https://ae01.alicdn.com/kf/Hb5534b3132464cae9076f58626cec9fdm.jpg" width="200">
 Zur Lärmpegelmessung. Der Eingang zum Mikrofon ist auf der Unterseite der Platine. 
 
-#### Piezo-Summer 
-**todo**
+#### Buzzer 
+Part-No: SEA-12085-16
+
 
 ### Anschlüsse 
 Neben den Anschlüssen für die Sensoren kommen außerdem noch die folgenden Anschlüsse auf die Platine.
