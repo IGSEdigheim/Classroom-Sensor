@@ -30,7 +30,7 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 
 ## Platine
 
-![Schaltskizze](Schematic_Classroom-Sensor_2020-10-26_14-34-49.png)
+![Schaltskizze](Schematic.png)
 
 * Außenmaße: 70x70 mm
 Die Maße des Feinstaubsensors definieren den Umriss der Platine (70mm x 70mm). Die Löcher (3,2mm) an den richtigen Stellen einplanen damit man den Feinstaubsensor auf die Rückseite der Platine schrauben kann.  
