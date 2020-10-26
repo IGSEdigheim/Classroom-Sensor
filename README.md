@@ -45,6 +45,7 @@ anschließen. Also maximal 6 LEDs.
 
 ### Anschluss für Feinstaubsensor [SDS011](https://www.aliexpress.com/item/4000029760504.html)
 LCSC: [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
+[Datenblatt](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
 
 ## Mikrocontroller, Sensoren und Aktoren
 
@@ -58,8 +59,6 @@ Es gibt zwei mögliche Anschlussmöglichkeiten:
 
 ### CO2-Sensor: [MH-Z19](https://www.aliexpress.com/item/4000212024923.html)
 <img src="https://ae01.alicdn.com/kf/H21416e6fddfb46539fdf563d8bf5ec212.jpg" width="200">
-
-[Datenblatt](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
 
 ### Umweltsensor [BME680](https://www.aliexpress.com/item/4000049700826.html)
 <img src="https://ae01.alicdn.com/kf/H9966c391bc334a649263d5f16d010e0dY.jpg" width="200">
