@@ -28,44 +28,47 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 
 ## Hardware
 
-#### ESP32: [Doit 30Pin Version:](https://www.aliexpress.com/item/32959541446.html)
+### Platine
+
+![Schaltskizze](Schematic_Classroom-Sensor_2020-10-26_14-34-49.png)
+
+* Außenmaße: 70x70 mm
+Die Maße des Feinstaubsensors definieren den Umriss der Platine (70mm x 70mm). Die Löcher (3,2mm) an den richtigen Stellen einplanen damit man den Feinstaubsensor auf die Rückseite der Platine schrauben kann.  
+
+### ESP32: [Doit 30Pin Version:](https://www.aliexpress.com/item/32959541446.html)
 <img src="https://ae01.alicdn.com/kf/HTB1_cCCac_vK1RkSmRyq6xwupXaM.jpg" width="200">
 
 Jeder Pin sollte doppelt auf der Platine sein, so dass jeder Pin verfügbar ist wenn der ESP auf die PLatine gesteckt ist. Diese Buchsen finden Verwendung:
 * Single: https://www.aliexpress.com/item/32970948352.html 
 * Double: https://www.aliexpress.com/item/32956866217.html 
 
+### Sensoren und Aktoren
+
 #### CO2-Sensor: [MH-Z19](https://www.aliexpress.com/item/4000212024923.html)
 <img src="https://ae01.alicdn.com/kf/H21416e6fddfb46539fdf563d8bf5ec212.jpg" width="200">
 
+[Datenblatt](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
+
 #### Umweltsensor [BME680](https://www.aliexpress.com/item/4000049700826.html)
 <img src="https://ae01.alicdn.com/kf/H9966c391bc334a649263d5f16d010e0dY.jpg" width="200">
-Derzeit wird noch der BME280 im QUellcode verwendet. Dieser soll durch den neuen BME680 ersetzt werden um auch VOC messen zu können.
 
 #### Mikrofon [INMP441](https://www.aliexpress.com/item/32961274528.html)
 <img src="https://ae01.alicdn.com/kf/Hb5534b3132464cae9076f58626cec9fdm.jpg" width="200">
-Zur Lärmpegelmessung. Der Eingang zum Mikrofon ist auf der Unterseite der Platine. 
+Zur Lärmpegelmessung.
 
-#### Buzzer 
-Part-No: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-12085-16_C2858.html)
+#### [Buzzer](https://www.aliexpress.com/item/32416854447.html)
+LCSC: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-12085-16_C2858.html)
 
-#### LED-Anschlüsse (6LEDs) 
-Man kann eine RGB-LED oder 3 LEDs mit einem Dupont-Kabel direkt an die Platine anschließen. Das geht mit 7 Pins. (4mal GND)
-Das Ganze zwei Mal. Also 14 Pins. 6 Für die Anoden und 8 mal GND
+#### LED [Anschluss](https://www.aliexpress.com/item/33053059178.html)
+LCSC: [C9139](https://lcsc.com/product-detail/IDC-Connectors_BOOMELE-Boom-Precision-Elec-C9139_C9139.html)
 
-#### Anschluss für Feinstaubsensor SDS011
-Part-No: [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
+An die Platine kann man zewimal per Dupont-Kabel entweder
+* je eine RGB-LED oder
+* je 3 LEDs 
+anschließen. Also maximal 6 LEDs.
 
-Auf der Platine sollte ein [5-Pin JST-XH Connector](https://www.aliexpress.com/item/4000029760504.html) für den Feinstaubsensor SDS011 am Rand vorhanden sein. 
-
-
-### Die Platine
-
-#### Außenmaße: 70x70 mm
-Die Maße des Feinstaubsensors definieren den Umriss der Platine (70mm x 70mm). Die Löcher (3,2mm) an den richtigen Stellen einplanen damit man den Feinstaubsensor auf die Rückseite der Platine schrauben kann.  
-
-[Datenblatt](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
- 
+#### Anschluss für Feinstaubsensor [SDS011](https://www.aliexpress.com/item/4000029760504.html)
+LCSC: [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
 
 ### Andere Projekte im Netz
 
