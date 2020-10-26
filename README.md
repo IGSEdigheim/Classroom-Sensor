@@ -35,7 +35,7 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 * Außenmaße: 70x70 mm
 Die Maße des Feinstaubsensors definieren den Umriss der Platine (70mm x 70mm). Die Löcher (3,2mm) an den richtigen Stellen einplanen damit man den Feinstaubsensor auf die Rückseite der Platine schrauben kann.  
 
-### [Anschluss für LEDs](https://www.aliexpress.com/item/33053059178.html)
+### [Anschluss für LEDs](https://de.aliexpress.com/item/4000113049761.html)
 LCSC: [C9139](https://lcsc.com/product-detail/IDC-Connectors_BOOMELE-Boom-Precision-Elec-C9139_C9139.html) oder [C492432](https://lcsc.com/product-detail/Pin-Header-Female-Header_XFCN-PZ254R-12-8P_C492432.html)
 
 An die Platine kann man zewimal per Dupont-Kabel entweder
