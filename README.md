@@ -1,5 +1,5 @@
 # Classroom-Sensor
-Sensor on ESP32 with CO2, MEMS
+ESP32 mit Sensoren für CO2, Umwelt (Temp,Hum,Pres) und Lautstärke sowie 2 RGB-LEDs, zwei Taster und ein Summer als Aktoren.
 
 # Software
 
@@ -11,7 +11,7 @@ Sensor on ESP32 with CO2, MEMS
 * Für MQTT: [PubSubClient](https://pubsubclient.knolleary.net/)
 ### Sensoren
 * [MH-Z19 von Jonathan Dempsey](https://github.com/WifWaf/MH-Z19)
-* [Adafruit BME280 Library](https://github.com/adafruit/Adafruit_BME280_Library)
+* [BME680 von SV-Zanshin](https://github.com/SV-Zanshin/BME680)
 
 ## MQTT-Server
 Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den verschlüsselten Port 8883
@@ -23,6 +23,7 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 * igs/environment/room1/temp
 * igs/environment/room1/hum
 * igs/environment/room1/pres
+* igs/environment/room1/gas
 * igs/environment/room1/vol
 
 
