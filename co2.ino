@@ -1,61 +1,54 @@
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-#include <PubSubClient.h> //https://github.com/knolleary/pubsubclient
-// https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
-#include <Adafruit_BME280.h> //https://github.com/adafruit/Adafruit_BME280_Library
-#include "MHZ19.h" //https://github.com/WifWaf/MH-Z19
-
-// Serial
+// Serial and IO
 #define SERIAL_BAUD 115200
-#define LED_G 12
-#define LED_B 13
-#define LED_R 14
+#define BUZZER 26
+#define LED1B 12
+#define LED1G 14
+#define LED1R 27
+#define LED2B 25
+#define LED2G 33
+#define LED2R 32
 
-// Deep Sleep
-#define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
+
+// Scheduling in loop and Deep Sleep
 RTC_DATA_ATTR int bootCount = 0;
-long deepsleep = 0;             /* nomber of seconds to sleep after task completed 0 = no deepsleep*/
-
-//Scheduling in loop
+unsigned long deepsleep = 0; // Seconds to sleep after task completed 0 = no deepsleep
+unsigned short max_awakeTime = 5; // Seconds to stay wake before next sleep
 unsigned long  now = 0;
 unsigned long  loopStart = 0;
-unsigned short max_awakeTime = 5000;
 unsigned short mqtt_poll_interval = 100;
 unsigned long  mqtt_push_interval = 10000;
 unsigned short vol_poll_interval = 100;
 
+// Wifi
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include "certs_p.h"
+WiFiClientSecure secureSocket;
 
-// Wifi and MQTT
-#include "certs.h"
+// MQTT
+#include <PubSubClient.h> //https://github.com/knolleary/pubsubclient
+// https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
 const char* mqtt_server = "mqtt.fadenstrahl.de";
 const int   mqtt_server_port = 8883;
 String clientId = "IGSE-ESP32-";
-WiFiClientSecure secureSocket;
 PubSubClient mqttClient(secureSocket);
 #define _sub_topic_deepsleep "igs/environment/deepsleep"
 #define _pub_topic_co2    "igs/environment/room1/co2"
 #define _pub_topic_temp   "igs/environment/room1/temp"
 #define _pub_topic_hum    "igs/environment/room1/hum"
 #define _pub_topic_pres   "igs/environment/room1/pres"
+#define _pub_topic_gas    "igs/environment/room1/gasresistance"
 #define _pub_topic_vol    "igs/environment/room1/vol"
 
-
 //MHZ-19 Co2-Sensor
+#include "MHZ19.h"            //https://github.com/WifWaf/MH-Z19
 MHZ19 myMHZ19;                // Constructor for library
 HardwareSerial mySerial(2);   // (ESP32 Example) create device to MH-Z19 serial
 #define BAUDRATE 9600         // Device to MH-Z19 Serial baudrate (should not be changed)
 
-//MAX9814 Microphone amp
-#define MicPin 34
-#define sampleWindow 50 // Sample window width in mS (50 mS = 20Hz)
-unsigned int sample;
-unsigned int maxVolume = 0; // max value during the mqtt_push_interval
-
-// BME280
-Adafruit_BME280 bme; // use I2C interface
-Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
-Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
-Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+// BME680
+#include "Zanshin_BME680.h"  // Include the BME680 Sensor library
+BME680_Class BME680;  ///< Create an instance of the BME680 class
 
 
 void setup_wifi() {
@@ -98,7 +91,7 @@ void callback(char* topic, byte* message, unsigned int length) {
   if (String(topic) == _sub_topic_deepsleep) {
     deepsleep = messageTemp.toInt();
     if (deepsleep) {
-      esp_sleep_enable_timer_wakeup(deepsleep * uS_TO_S_FACTOR);
+      esp_sleep_enable_timer_wakeup(deepsleep * 1000000); // sleeptime in microseconds
       Serial.println("Setup ESP32 to sleep for every " + messageTemp + " Seconds");
     } else {
       esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);
@@ -161,84 +154,63 @@ void measureCO2(){
   if below background CO2 levels or above range (useful to validate sensor). You can use the 
   usual documented command with getCO2(false) */
 
-  CO2 = myMHZ19.getCO2();                             // Request CO2 (as ppm)
-  Temp = myMHZ19.getTemperature();                     // Request Temperature (as Celsius)
+  CO2 = myMHZ19.getCO2();             // Request CO2 (as ppm)
+  Temp = myMHZ19.getTemperature();    // Request Temperature (as Celsius)
 
   if (CO2 < 1000)
   {
-    digitalWrite(LED_R, LOW);
-    digitalWrite(LED_G, HIGH);
-    digitalWrite(LED_B, LOW);
+    digitalWrite(LED1R, LOW);
+    digitalWrite(LED1G, HIGH);
+    digitalWrite(LED1B, LOW);
   } else if (CO2 < 2000) {
-    digitalWrite(LED_R, HIGH);
-    digitalWrite(LED_G, HIGH);
-    digitalWrite(LED_B, LOW);    
+    digitalWrite(LED1R, HIGH);
+    digitalWrite(LED1G, HIGH);
+    digitalWrite(LED1B, LOW);    
   } else {
-    digitalWrite(LED_R, HIGH);
-    digitalWrite(LED_G, LOW);
-    digitalWrite(LED_B, LOW);
+    digitalWrite(LED1R, HIGH);
+    digitalWrite(LED1G, LOW);
+    digitalWrite(LED1B, LOW);
   }
 
   //Serial.println("CO2 (ppm): " + String(CO2));
   //Serial.println("Temperature (C): " + String(Temp));
-  
-  publishMessage(_pub_topic_co2, String(CO2).c_str(), true);
-  //publishMessage(_pub_topic_temp, String(Temp).c_str(), true);
+
+  if (CO2 != 0 && CO2 != 5000)
+  {
+    publishMessage(_pub_topic_co2, String(CO2).c_str(), true);
+    publishMessage(_pub_topic_temp, String(Temp).c_str(), true);
+  }
 }
 
+void measureBME680() {
+  static int32_t  temp, humidity, pressure, gas;  // BME readings
+  BME680.getSensorData(temp, humidity, pressure, gas);   // Get readings
 
-unsigned int measureBME280(){
-  sensors_event_t temp_event, pressure_event, humidity_event;
-  bme_temp->getEvent(&temp_event);
-  bme_pressure->getEvent(&pressure_event);
-  bme_humidity->getEvent(&humidity_event);
+  //Serial.print(F("Temperature = "));
+  //Serial.print(float(temp)/100);
+  //Serial.println(" \xC2\xB0\x43");
+  publishMessage(_pub_topic_temp, String(float(temp)/100).c_str(), true);
 
-  /*
-  Serial.print(F("Temperature = "));
-  Serial.print(temp_event.temperature);
-  Serial.println(" *C");
+  //Serial.print(F("Humidity = "));
+  //Serial.print(float(humidity)/1000);
+  //Serial.println(" %");
+  publishMessage(_pub_topic_hum,  String(float(humidity)/1000).c_str(), true);
   
-  Serial.print(F("Humidity = "));
-  Serial.print(humidity_event.relative_humidity);
-  Serial.println(" %");
-
-  Serial.print(F("Pressure = "));
-  Serial.print(pressure_event.pressure);
-  Serial.println(" hPa");
-  */
-  publishMessage(_pub_topic_temp, String(temp_event.temperature).c_str(), true);
-  publishMessage(_pub_topic_hum,  String(humidity_event.relative_humidity).c_str(), true);
-  publishMessage(_pub_topic_pres, String(pressure_event.pressure).c_str(), true);
-}
-
-
-unsigned int measureVolume(){
-  unsigned long startMillis= millis();  // Start of sample window
-  unsigned int peakToPeak = 0;   // peak-to-peak level
+  //Serial.print(F("Pressure = "));
+  //Serial.print(float(pressure)/100);
+  //Serial.println(" hPa");
+  publishMessage(_pub_topic_pres, String(float(pressure)/100).c_str(), true);
   
-  unsigned int signalMax = 0;
-  unsigned int signalMin = 1024;
+  //Serial.print(F("Gas Resistance = "));
+  //Serial.print(float(gas)/100);
+  //Serial.println(F(" m\xE2\x84\xA6"));
+  publishMessage(_pub_topic_gas, String(float(gas)/100).c_str(), true);
 
-  // collect data for sampleWindow mS
-  while (millis() - startMillis < sampleWindow)
-  {
-    sample = analogRead(MicPin);
-
-    if (sample < 1024)  // toss out spurious readings
-    {
-      //if (sample > signalMax)
-      signalMax = max(signalMax, sample);  // save just the max levels
-      //else if (sample < signalMin)
-      signalMin = min(signalMin, sample);  // save just the min levels
-    }
-  }
-  if (!(signalMin == 1024 || signalMax == 0))
-  {
-    peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
-    peakToPeak = map(peakToPeak, 0, 1023, 0 , 99);
-  }
-
-  return peakToPeak;
+  //const float seaLevel = 1013.25;
+  //float altitude = 44330.0 * (1.0 - pow(((float)pressure / 100.0) / seaLevel, 0.1903));  // Convert into meters
+  //Serial.print(F("Altitude = "));
+  //Serial.print(altitude);
+  //Serial.println(" m");
 }
 
 
@@ -247,12 +219,30 @@ void setup() {
   Serial.println();
   Serial.println();
 
-  pinMode(LED_R, OUTPUT);
-  pinMode(LED_G, OUTPUT);
-  pinMode(LED_B, OUTPUT);
+  pinMode(LED1R, OUTPUT);
+  pinMode(LED1G, OUTPUT);
+  pinMode(LED1B, OUTPUT);
 
   ++bootCount;
-  Serial.println("Boot number: " + String(bootCount));
+  Serial.println("- Boot number: " + String(bootCount));
+
+  Serial.print(F("- Initializing MHZ-19 CO\xE2\x82\x82 sensor\n")); //  "CO₂" symbol
+  mySerial.begin(BAUDRATE); 
+  myMHZ19.begin(mySerial);                                // *Serial(Stream) refence must be passed to library begin(). 
+  myMHZ19.autoCalibration();                              // Turn auto calibration ON (OFF autoCalibration(false))
+
+  Serial.println("- Initializing BME680 sensor");
+  if (!BME680.begin(I2C_STANDARD_MODE)) // Start BME680 using I2C, use first device found
+    Serial.println("Could not find a valid BME680 sensor, check wiring, address, sensor ID!");
+  
+  //Serial.print(F("- Setting 16x oversampling for all sensors\n"));
+  BME680.setOversampling(TemperatureSensor, Oversample16);  // Use enumerated type values
+  BME680.setOversampling(HumiditySensor, Oversample16);     // Use enumerated type values
+  BME680.setOversampling(PressureSensor, Oversample16);     // Use enumerated type values
+  //Serial.print(F("- Setting IIR filter to a value of 4 samples\n"));
+  BME680.setIIRFilter(IIR4);  // Use enumerated type values
+  //Serial.print(F("- Setting gas measurement to 320\xC2\xB0\x43 for 150ms\n"));  // "°C" symbols
+  BME680.setGas(320, 150);  // 320°C for 150 milliseconds
   
   setup_wifi();
  
@@ -261,18 +251,6 @@ void setup() {
   mqttClient.setCallback(callback);
 
   reconnect_mqtt();
-
-  mySerial.begin(BAUDRATE); 
-  myMHZ19.begin(mySerial);                                // *Serial(Stream) refence must be passed to library begin(). 
-  myMHZ19.autoCalibration();                              // Turn auto calibration ON (OFF autoCalibration(false))
-
-  unsigned status = bme.begin(0x76);
-  if (!status)
-    Serial.println("Could not find a valid BME280 sensor, check wiring, address, sensor ID!");
-  
-  //bme_temp->printSensorDetails();
-  //bme_pressure->printSensorDetails();
-  //bme_humidity->printSensorDetails();
 
   loopStart = millis();
 }
@@ -288,22 +266,23 @@ void loop() {
     mqttClient.loop();
   }
   
-  if (now % vol_poll_interval == 0)
-  {
-    maxVolume = max(measureVolume(), maxVolume);
-  }
+  //if (now % vol_poll_interval == 0)
+  //{
+  //  maxVolume = max(measureVolume(), maxVolume);
+  //}
   
   if (now % mqtt_push_interval == 0)
   {
-    measureCO2();
-    measureBME280();
-    
     //Serial.println("Volume: " + String(maxVolume));
-    publishMessage(_pub_topic_vol, String(maxVolume).c_str(), true);
-    maxVolume = 0;
+    //publishMessage(_pub_topic_vol, String(maxVolume).c_str(), true);
+    //maxVolume = 0;
+
+    measureCO2();
+    measureBME680();
+    
   }
   
-  if (now > max_awakeTime && deepsleep) {
+  if (now > (max_awakeTime * 1000) && deepsleep) {
     mqttClient.disconnect();
     Serial.println("Going to sleep now");
     Serial.flush();
