@@ -1,19 +1,19 @@
 // Replace the next variables with your SSID/Password combination
-const char* ssid = "wetter";
-const char* password = "";
+const char* ssid = "your_ssid";
+const char* password = "your_password";
 
-// TLS
-// mqtt.fadenstrahl.de:/etc/letsencrypt/live/mqtt.fadenstrahl.de/chain.pem
+// Put your TLS chain.pem here. Yhe given one will not work!
+// /etc/letsencrypt/live/mqtt.YOURDOMANE.de/chain.pem
 const char* test_root_ca= \
      "-----BEGIN CERTIFICATE-----\n" \
      "MIIEkjCCA3qgAwIBAgIQCgFBQgAAAVOFc2oLheynCDANBgkqhkiG9w0BAQsFADA/\n" \
      "MSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT\n" \
-     "DkRTVCBSb290IENBIFgzMB4XDTE2MDMxNzE2NDA0NloXDTIxMDMxNzE2NDA0Nlow\n" \
+     "DkRTVCBSb290IENBIFgzMB4XDTE2MDMxNzE2FDA0NloXDTIxMDMxNzE2NDA0Nlow\n" \
      "SjELMAkGA1UEBhMCVVMxFjAUBgNVBAoTDUxldCdzIEVuY3J5cHQxIzAhBgNVBAMT\n" \
      "GkxldCdzIEVuY3J5cHQgQXV0aG9yaXR5IFgzMIIBIjANBgkqhkiG9w0BAQEFAAOC\n" \
      "AQ8AMIIBCgKCAQEAnNMM8FrlLke3cl03g7NoYzDq1zUmGSXhvb418XCSL7e4S0EF\n" \
      "q6meNQhY7LEqxGiHC6PjdeTm86dicbp5gWAf15Gan/PQeGdxyGkOlZHP/uaZ6WA8\n" \
-     "SMx+yk13EiSdRxta67nsHjcAHJyse6cF6s5K671B5TaYucv9bTyWaN8jKkKQDIZ0\n" \
+     "SMx+yk13EiSdRxta67nsHjcAHJyse6cF6s5K571B5TaYucv9bTyWaN8jKkKQDIZ0\n" \
      "Z8h/pZq4UmEUEz9l6YKHy9v6Dlb2honzhT+Xhq+w3Brvaw2VFn3EK6BlspkENnWA\n" \
      "a6xK8xuQSXgvopZPKiAlKQTGdMDQMc2PMTiVFrqoM7hD8bEfwzB/onkxEz0tNvjj\n" \
      "/PIzark5McWvxI0NHWQWM6r6hCm21AvA2H3DkwIDAQABo4IBfTCCAXkwEgYDVR0T\n" \

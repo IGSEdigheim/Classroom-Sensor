@@ -18,8 +18,8 @@ unsigned short max_awakeTime = 5; // Seconds to stay wake before next sleep
 unsigned long  now = 0;
 unsigned long  loopStart = 0;
 unsigned short mqtt_poll_interval = 100;
-unsigned long  mqtt_push_interval = 10000;
-unsigned short vol_poll_interval = 5000;
+unsigned long  mqtt_push_interval = 30000;
+unsigned short vol_push_interval = 5000;
 
 // Wifi
 #include <WiFi.h>
@@ -285,7 +285,7 @@ void loop() {
     mqttClient.loop();
   }
   
-  if (now % vol_poll_interval == 0)
+  if (now % vol_push_interval == 0)
   {
     double _Leq_dB;
     if(xQueueReceive(samples_queue, &_Leq_dB, portMAX_DELAY)){
