@@ -1,4 +1,6 @@
 # Classroom-Sensor
+[Projektseite auf oshwlab.com](https://oshwlab.com/Classroom-Sensor/classroom-sensor)
+
 ESP32 mit Sensoren für CO2, Umwelt (Temp,Hum,Pres) und Lautstärke sowie 2 RGB-LEDs, zwei Taster und ein Summer als Aktoren.
 
 # Software
