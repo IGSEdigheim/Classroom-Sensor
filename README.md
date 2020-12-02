@@ -5,6 +5,10 @@ ESP32 mit Sensoren für CO2, Umwelt (Temp,Hum,Pres) und Lautstärke sowie 2 RGB-
 
 # Software
 
+## Datenfluss
+
+![Datenfluss](img/Datenfluss.png)
+
 ## Verwendete Arduino Bibliotheken
 
 ### Internet
