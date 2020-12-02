@@ -16,8 +16,9 @@ ESP32 mit Sensoren für CO2, Umwelt (Temp,Hum,Pres) und Lautstärke sowie 2 RGB-
 * [WifiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure)
 * Für MQTT: [PubSubClient](https://pubsubclient.knolleary.net/)
 ### Sensoren
-* [MH-Z19 von Jonathan Dempsey](https://github.com/WifWaf/MH-Z19)
-* [BME680 von SV-Zanshin](https://github.com/SV-Zanshin/BME680)
+* [MH-Z19](https://github.com/WifWaf/MH-Z19) von Jonathan Dempsey
+* [BME680](https://github.com/SV-Zanshin/BME680) von SV-Zanshin
+* [INMP441](https://github.com/ikostoski/esp32-i2s-slm) von Ivan Kostoski
 
 ## MQTT-Server
 Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den verschlüsselten Port 8883
