@@ -25,7 +25,7 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 * igs/environment/room1/temp
 * igs/environment/room1/hum
 * igs/environment/room1/pres
-* igs/environment/room1/gas
+* igs/environment/room1/gasresistance
 * igs/environment/room1/vol
 
 
