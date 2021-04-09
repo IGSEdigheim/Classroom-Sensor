@@ -80,6 +80,9 @@ Zur Lärmpegelmessung.
 ### [Buzzer](https://www.aliexpress.com/item/32416854447.html)
 LCSC: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-12085-16_C2858.html)
 
+### [Taster](https://de.aliexpress.com/item/4000800019378.html)
+LCSC: [SKHHNHA010](https://lcsc.com/product-detail/Tactile-Switches_ALPSALPINE-SKHHNHA010_C219779.html)
+
 ## Andere Projekte im Netz
 
 * https://randomnerdtutorials.com/build-an-all-in-one-esp32-weather-station-shield/ 
