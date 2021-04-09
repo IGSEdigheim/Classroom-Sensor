@@ -24,7 +24,7 @@ unsigned short vol_push_interval = 5000;
 // Wifi
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include "certs_p.h"
+#include "certs.h"
 WiFiClientSecure secureSocket;
 
 // MQTT
@@ -35,12 +35,12 @@ const int   mqtt_server_port = 8883;
 String clientId = "IGSE-ESP32-";
 PubSubClient mqttClient(secureSocket);
 #define _sub_topic_deepsleep "igs/environment/deepsleep"
-#define _pub_topic_co2    "igs/environment/room1/co2"
-#define _pub_topic_temp   "igs/environment/room1/temp"
-#define _pub_topic_hum    "igs/environment/room1/hum"
-#define _pub_topic_pres   "igs/environment/room1/pres"
-#define _pub_topic_gas    "igs/environment/room1/gasresistance"
-#define _pub_topic_vol    "igs/environment/room1/vol"
+#define _pub_topic_co2    "igs/environment/room2/co2"
+#define _pub_topic_temp   "igs/environment/room2/temp"
+#define _pub_topic_hum    "igs/environment/room2/hum"
+#define _pub_topic_pres   "igs/environment/room2/pres"
+#define _pub_topic_gas    "igs/environment/room2/gasresistance"
+#define _pub_topic_vol    "igs/environment/room2/vol"
 
 //MHZ-19 Co2-Sensor
 #include "MHZ19.h"            //https://github.com/WifWaf/MH-Z19
