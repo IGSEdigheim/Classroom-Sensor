@@ -42,13 +42,14 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 ![Platine](img/Classroom-Sensor_v2_2D.png)
 ![Schaltskizze](img/Classroom-Sensor_v2_Schematic.png)
 
-* Außenmaße: 70x70 mm
-Die Maße des Feinstaubsensors definieren den Umriss der Platine (70mm x 70mm). Die Löcher (3,2mm) an den richtigen Stellen einplanen damit man den Feinstaubsensor auf die Rückseite der Platine schrauben kann.  
+* Außenmaß:
+Die Innenmaße des [Ikea Rahmens Ribba 10x15](https://www.ikea.com/de/de/p/ribba-rahmen-weiss-50378410/) definieren den Umriss der Platine (152.5mm x 102.6mm).
+Die Löcher (3,2mm) sind dafür da um optional den Feinstaubsensor auf die Rückseite der Platine anzuschrauben.
 
 ### [Anschluss für LEDs](https://de.aliexpress.com/item/4000113049761.html)
 LCSC: [C9139](https://lcsc.com/product-detail/IDC-Connectors_BOOMELE-Boom-Precision-Elec-C9139_C9139.html) oder [C492432](https://lcsc.com/product-detail/Pin-Header-Female-Header_XFCN-PZ254R-12-8P_C492432.html)
 
-An die Platine kann man zewimal per Dupont-Kabel entweder
+An die Platine kann man zweimal per Dupont-Kabel entweder
 * je eine RGB-LED oder
 * je 3 LEDs 
 anschließen. Also maximal 6 LEDs.
