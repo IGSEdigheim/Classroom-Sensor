@@ -28,13 +28,14 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 
 ### MQTT-Topics
 * igs/environment/deepsleep
-* igs/environment/room1/co2
-* igs/environment/room1/temp
-* igs/environment/room1/hum
-* igs/environment/room1/pres
-* igs/environment/room1/gasresistance
-* igs/environment/room1/vol
+* igs/environment/RAUM_ID/co2
+* igs/environment/RAUM_ID/temp
+* igs/environment/RAUM_ID/hum
+* igs/environment/RAUM_ID/pres
+* igs/environment/RAUM_ID/gasresistance
+* igs/environment/RAUM_ID/vol
 
+Wobei **RAUM_ID** durch eine eindeutige Kennzeichnung des Raumes ersetzt wird. Zu Testzwecken verwende ich *raum1* und *raum2*.
 
 # Hardware
 
@@ -62,43 +63,67 @@ Es eignet sich zu Beispiel ein abgewinkelter [2X4P IDC Connector](https://de.ali
 LCSC: [2X4P IDC Connector](https://lcsc.com/product-detail/IDC-Connectors_BOOMELE-Boom-Precision-Elec-C9139_C9139.html) oder [C492432](https://lcsc.com/product-detail/Pin-Header-Female-Header_XFCN-PZ254R-12-8P_C492432.html)
 
 
-### Anschluss für Feinstaubsensor [SDS011](https://www.aliexpress.com/item/4000029760504.html)
+### Anschluss für Feinstaubsensor (SDS011)
 
 Dieser Anschluss ist für den Classroom-Sensor absolut optional.
 Dabei Feinstaubsensor handelt es sich um ein total anderes Projekt, dass sich mit dieser Platine ebenfalls umsetzten lässt.
 
-Buchse bei LCSC: [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
-
 [Datenblatt des Feinstaubsensors](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
+
+#### Bezugquellen
+* [AliExpress](https://www.aliexpress.com/item/4000029760504.html)
+* LCSC [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
 
 ## Mikrocontroller, Sensoren und Aktoren
 
-### ESP32: [Doit 30Pin Version:](https://www.aliexpress.com/item/32959541446.html)
+### ESP32 (Doit 30Pin Version)
 <img src="https://ae01.alicdn.com/kf/HTB1_cCCac_vK1RkSmRyq6xwupXaM.jpg" width="200">
 
 Jeder Pin des ESP32 Entwicklungsboards ist auf der Platine herausgeführt.
 Bei Bedarf können zwei [einreihige Pin-Buchsen](https://www.aliexpress.com/item/32970948352.html) (15 Pins pro Seite) aufgelötet werden.
 
-### CO2-Sensor: [MH-Z19](https://www.aliexpress.com/item/4000212024923.html)
+#### Bezugquelle
+* [AliExpress](https://www.aliexpress.com/item/32959541446.html)
+
+### CO2-Sensor: (MH-Z19)
 <img src="https://ae01.alicdn.com/kf/H21416e6fddfb46539fdf563d8bf5ec212.jpg" width="200">
 
-### Umweltsensor [BME680](https://www.aliexpress.com/item/4000049700826.html)
+#### Bezugquelle
+* [AliExpress](https://www.aliexpress.com/item/4000212024923.html)
+
+### Umweltsensor (BME680)
 <img src="https://ae01.alicdn.com/kf/H9966c391bc334a649263d5f16d010e0dY.jpg" width="200">
 
-### Mikrofon [INMP441](https://www.aliexpress.com/item/32961274528.html)
+#### Bezugquelle
+* [AliExpress](https://www.aliexpress.com/item/4000049700826.html)
+
+### Mikrofon (INMP441)
 <img src="https://ae01.alicdn.com/kf/Hb5534b3132464cae9076f58626cec9fdm.jpg" width="200">
 
 Zur Lärmpegelmessung.
 
-### [Buzzer](https://www.aliexpress.com/item/32416854447.html)
-LCSC: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-12085-16_C2858.html)
+#### Bezugquelle
+* [AliExpress](https://www.aliexpress.com/item/32961274528.html)
 
-### [Taster](https://de.aliexpress.com/item/4000800019378.html)
-LCSC: [SKHHNHA010](https://lcsc.com/product-detail/Tactile-Switches_ALPSALPINE-SKHHNHA010_C219779.html)
+### Summer (Buzzer)
 
-### [RGB-LED](https://de.aliexpress.com/item/32278313170.html)
+#### Bezugquellen
+* [AliExpress](https://www.aliexpress.com/item/32416854447.html)
+* LCSC: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-12085-16_C2858.html)
+
+### Taster
+
+#### Bezugquellen
+* [AliExpress](https://de.aliexpress.com/item/4000800019378.html)
+* LCSC: [SKHHNHA010](https://lcsc.com/product-detail/Tactile-Switches_ALPSALPINE-SKHHNHA010_C219779.html)
+
+### RGB-LED
+
 Man hat die Wahl zwischen zwei RGB Leuchtdioden mit *gemeinsamer Kathode* oder bis zu 6 einzelnen LEDs. Man kann auch eine RGB LED und 3 einzelne LEDs verwenden.
 Ich rate zu diffusen LEDs, da sich die Farben besser mischen.
+
+#### Bezugquelle
+* [AliExpress](https://de.aliexpress.com/item/32278313170.html)
 
 ## Links zu weiteren Projekten
 
