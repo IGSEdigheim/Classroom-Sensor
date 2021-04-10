@@ -13,8 +13,10 @@ ESP32 mit Sensoren für CO2, Umwelt (Temp,Hum,Pres) und Lautstärke sowie 2 RGB-
 
 ### Internet
 * [Wifi](https://www.arduino.cc/en/Reference/WiFi)
-* [WifiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure)
-* Für MQTT: [PubSubClient](https://pubsubclient.knolleary.net/)
+* Für die sichere TLS (SSL) Verbindung zum MQTT-Server: [WifiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure)
+* Für das MQTT-Protokoll: [PubSubClient](https://pubsubclient.knolleary.net/)
+* Für die Steuerung der LEDs: [jled](https://github.com/jandelgado/jled#static-on-and-off)
+
 ### Sensoren
 * [MH-Z19](https://github.com/WifWaf/MH-Z19) von Jonathan Dempsey
 * [BME680](https://github.com/SV-Zanshin/BME680) von SV-Zanshin
@@ -46,27 +48,36 @@ Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environ
 Die Innenmaße des [Ikea Rahmens Ribba 10x15](https://www.ikea.com/de/de/p/ribba-rahmen-weiss-50378410/) definieren den Umriss der Platine (152.5mm x 102.6mm).
 Die Löcher (3,2mm) sind dafür da um optional den Feinstaubsensor auf die Rückseite der Platine anzuschrauben.
 
-### [Anschluss für LEDs](https://de.aliexpress.com/item/4000113049761.html)
-LCSC: [C9139](https://lcsc.com/product-detail/IDC-Connectors_BOOMELE-Boom-Precision-Elec-C9139_C9139.html) oder [C492432](https://lcsc.com/product-detail/Pin-Header-Female-Header_XFCN-PZ254R-12-8P_C492432.html)
+### Anschlussmöglichkeiten für die LEDs
 
-An die Platine kann man zweimal per Dupont-Kabel entweder
-* je eine RGB-LED oder
-* je 3 LEDs 
-anschließen. Also maximal 6 LEDs.
+Auf der Platine gibt es zwei Anschlussmöglichkeiten für bis zu 6 LEDs. Eine RGB-LED ersetzt 3 LEDs. Es lassen sich also zwei RGB-LEDs anschließen und beliebig programmieren.
+Die erste LED könnte die CO₂-Konzentration und die zweite die Lautstärke anzeigen.
+
+Die LEDs kann man an einem beliebigen Platz direkt auf die Platine auflöten indem man für eine RGB-LED vier nebeneinanderstehende freie Lötlöcher auswählt.
+Alle Löcher mit quadratischer Lötstelle sind mit GND (Minus) verbunden. Die anderen Löcher (mit runden Lötstellen) sind nicht verbunden.
+Für jede LED braucht es also eine Kabelverbindung zu einem der LED Anschlussstellen, die mit LED1 und LED2 beschriftet sind.
+
+Alternativ kann man die LEDs auch mit einem Kabel mit der Platine verbinden, wenn man einen Connector auf die Platine lötet.
+Es eignet sich zu Beispiel ein abgewinkelter [2X4P IDC Connector](https://de.aliexpress.com/item/4000113049761.html) oder ein 2x4 Pin Header.
+LCSC: [2X4P IDC Connector](https://lcsc.com/product-detail/IDC-Connectors_BOOMELE-Boom-Precision-Elec-C9139_C9139.html) oder [C492432](https://lcsc.com/product-detail/Pin-Header-Female-Header_XFCN-PZ254R-12-8P_C492432.html)
+
 
 ### Anschluss für Feinstaubsensor [SDS011](https://www.aliexpress.com/item/4000029760504.html)
-LCSC: [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
-[Datenblatt](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
+
+Dieser Anschluss ist für den Classroom-Sensor absolut optional.
+Dabei Feinstaubsensor handelt es sich um ein total anderes Projekt, dass sich mit dieser Platine ebenfalls umsetzten lässt.
+
+Buchse bei LCSC: [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
+
+[Datenblatt des Feinstaubsensors](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
 
 ## Mikrocontroller, Sensoren und Aktoren
 
 ### ESP32: [Doit 30Pin Version:](https://www.aliexpress.com/item/32959541446.html)
 <img src="https://ae01.alicdn.com/kf/HTB1_cCCac_vK1RkSmRyq6xwupXaM.jpg" width="200">
 
-Jeder Pin des ESP32 ist der Flexibilität  halber auf der Platine herausgeführt.
-Es gibt zwei mögliche Anschlussmöglichkeiten:
-* Single: https://www.aliexpress.com/item/32970948352.html 
-* Double: https://www.aliexpress.com/item/32956866217.html 
+Jeder Pin des ESP32 Entwicklungsboards ist auf der Platine herausgeführt.
+Bei Bedarf können zwei [einreihige Pin-Buchsen](https://www.aliexpress.com/item/32970948352.html) (15 Pins pro Seite) aufgelötet werden.
 
 ### CO2-Sensor: [MH-Z19](https://www.aliexpress.com/item/4000212024923.html)
 <img src="https://ae01.alicdn.com/kf/H21416e6fddfb46539fdf563d8bf5ec212.jpg" width="200">
@@ -76,6 +87,7 @@ Es gibt zwei mögliche Anschlussmöglichkeiten:
 
 ### Mikrofon [INMP441](https://www.aliexpress.com/item/32961274528.html)
 <img src="https://ae01.alicdn.com/kf/Hb5534b3132464cae9076f58626cec9fdm.jpg" width="200">
+
 Zur Lärmpegelmessung.
 
 ### [Buzzer](https://www.aliexpress.com/item/32416854447.html)
@@ -84,7 +96,12 @@ LCSC: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-1
 ### [Taster](https://de.aliexpress.com/item/4000800019378.html)
 LCSC: [SKHHNHA010](https://lcsc.com/product-detail/Tactile-Switches_ALPSALPINE-SKHHNHA010_C219779.html)
 
-## Andere Projekte im Netz
+### RGB-LED (https://de.aliexpress.com/item/32278313170.html)
+Man hat die Wahl zwischen zwei RGB Leuchtdioden mit *gemeinsamer Kathode* oder bis zu 6 einzelnen LEDs. Man kann auch eine RGB LED und 3 einzelne LEDs verwenden.
+Ich rate zu diffusen LEDs, da sich die Farben besser mischen.
+
+## Links zu weiteren Projekten
 
 * https://randomnerdtutorials.com/build-an-all-in-one-esp32-weather-station-shield/ 
 * https://github.com/kadamski/dust_sensor 
+* https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise-1
