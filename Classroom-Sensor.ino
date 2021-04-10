@@ -22,25 +22,21 @@ unsigned long  mqtt_push_interval = 30000;
 unsigned short vol_push_interval = 5000;
 
 // Wifi
-#include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include "certs.h"
+#include "cred.h"
 WiFiClientSecure secureSocket;
 
 // MQTT
-#include <PubSubClient.h> //https://github.com/knolleary/pubsubclient
-// https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
-const char* mqtt_server = "mqtt.fadenstrahl.de";
-const int   mqtt_server_port = 8883;
+#include <MQTT.h>
+MQTTClient client;
 String clientId = "IGSE-ESP32-";
-PubSubClient mqttClient(secureSocket);
 #define _sub_topic_deepsleep "igs/environment/deepsleep"
-#define _pub_topic_co2    "igs/environment/room2/co2"
-#define _pub_topic_temp   "igs/environment/room2/temp"
-#define _pub_topic_hum    "igs/environment/room2/hum"
-#define _pub_topic_pres   "igs/environment/room2/pres"
-#define _pub_topic_gas    "igs/environment/room2/gasresistance"
-#define _pub_topic_vol    "igs/environment/room2/vol"
+#define _pub_topic_co2    "igs/environment/room1/co2"
+#define _pub_topic_temp   "igs/environment/room1/temp"
+#define _pub_topic_hum    "igs/environment/room1/hum"
+#define _pub_topic_pres   "igs/environment/room1/pres"
+#define _pub_topic_gas    "igs/environment/room1/gasresistance"
+#define _pub_topic_vol    "igs/environment/room1/vol"
 
 //MHZ-19 Co2-Sensor
 #include "MHZ19.h"            //https://github.com/WifWaf/MH-Z19
@@ -56,15 +52,13 @@ BME680_Class BME680;  ///< Create an instance of the BME680 class
 #include "slm.h"
 
 
-void setup_wifi() {
+void connect_wifi() {
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
   Serial.print(ssid);
   
-  WiFi.begin(ssid, password);
-
   byte TryCounter = 0;
   while ((WiFi.status() != WL_CONNECTED) && (TryCounter < 10)) {
     delay(1000);
@@ -81,23 +75,23 @@ void setup_wifi() {
 }
 
 
-void callback(char* topic, byte* message, unsigned int length) {
+void messageReceived(String &topic, String &payload) {
   Serial.print("Message arrived on topic: ");
   Serial.print(topic);
   Serial.print(". Message: ");
   String messageTemp;
   
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)message[i]);
-    messageTemp += (char)message[i];
-  }
+  //for (int i = 0; i < length; i++) {
+  //  Serial.print((char)message[i]);
+  //  messageTemp += (char)message[i];
+  //}
   Serial.println();
 
   if (String(topic) == _sub_topic_deepsleep) {
-    deepsleep = messageTemp.toInt();
+    deepsleep = payload.toInt();
     if (deepsleep) {
       esp_sleep_enable_timer_wakeup(deepsleep * 1000000); // sleeptime in microseconds
-      Serial.println("Setup ESP32 to sleep for every " + messageTemp + " Seconds");
+      Serial.println("Setup ESP32 to sleep for every " + payload + " Seconds");
     } else {
       esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);
       Serial.println("Setup ESP32 to not perform any deepsleep.");
@@ -107,22 +101,22 @@ void callback(char* topic, byte* message, unsigned int length) {
 }
 
 
-void reconnect_mqtt() {
+void connect_mqtt() {
   byte TryCounter = 0;
   // Loop until we're connected
-  while (!mqttClient.connected() && (TryCounter < 10))
+  while (!client.connected() && (TryCounter < 10))
   {
     TryCounter++;
 
-    Serial.print("Attempting MQTT connection...");
+    Serial.print("Attempting MQTT connection");
     // Create a random client ID
     clientId += String(random(0xffff), HEX);
     // Attempt to connect
-    if (mqttClient.connect(clientId.c_str())) {
-      Serial.println("connected");
+    if (client.connect(clientId.c_str())) {
+      Serial.println(" connected");
       
       // Subscribe topics
-      if(mqttClient.subscribe(_sub_topic_deepsleep)){
+      if(client.subscribe(_sub_topic_deepsleep)){
         Serial.print("Subscribed to ");
       } else {
         Serial.print("Failed to subscribe to ");
@@ -130,24 +124,21 @@ void reconnect_mqtt() {
       Serial.println(_sub_topic_deepsleep);
       
     } else {
-      Serial.print("failed, rc=");
-      Serial.print(mqttClient.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
+      Serial.print(".");
       delay(5000);
     }
   }
-  if (!mqttClient.connected() && (TryCounter > 9))
+  if (!client.connected() && (TryCounter > 9))
     ESP.restart();
 }
 
 
-void publishMessage(const char* topic, const char* message, bool retain) {
+void publishMessage(String topic, String message, bool retain) {
   Serial.print("Message sent to topic: ");
   Serial.print(topic);
   Serial.print(". Message: ");
   Serial.println(message);
-  mqttClient.publish(topic, message, retain);
+  client.publish(topic, message);
 }
 
 
@@ -186,8 +177,8 @@ void measureCO2(){
 
   if (CO2 != 0 && CO2 != 5000)
   {
-    publishMessage(_pub_topic_co2, String(CO2).c_str(), true);
-    //publishMessage(_pub_topic_temp, String(Temp).c_str(), true);
+    publishMessage(_pub_topic_co2, String(CO2), true);
+    //publishMessage(_pub_topic_temp, String(Temp), true);
   }
 }
 
@@ -198,22 +189,22 @@ void measureBME680() {
   //Serial.print(F("Temperature = "));
   //Serial.print(float(temp)/100);
   //Serial.println(" \xC2\xB0\x43");
-  publishMessage(_pub_topic_temp, String(float(temp)/100).c_str(), true);
+  publishMessage(_pub_topic_temp, String(float(temp)/100), true);
 
   //Serial.print(F("Humidity = "));
   //Serial.print(float(humidity)/1000);
   //Serial.println(" %");
-  publishMessage(_pub_topic_hum,  String(float(humidity)/1000).c_str(), true);
+  publishMessage(_pub_topic_hum,  String(float(humidity)/1000), true);
   
   //Serial.print(F("Pressure = "));
   //Serial.print(float(pressure)/100);
   //Serial.println(" hPa");
-  publishMessage(_pub_topic_pres, String(float(pressure)/100).c_str(), true);
+  publishMessage(_pub_topic_pres, String(float(pressure)/100), true);
   
   //Serial.print(F("Gas Resistance = "));
   //Serial.print(float(gas)/100);
   //Serial.println(F(" m\xE2\x84\xA6"));
-  publishMessage(_pub_topic_gas, String(float(gas)/100).c_str(), true);
+  publishMessage(_pub_topic_gas, String(float(gas)/100), true);
 
   //const float seaLevel = 1013.25;
   //float altitude = 44330.0 * (1.0 - pow(((float)pressure / 100.0) / seaLevel, 0.1903));  // Convert into meters
@@ -263,13 +254,13 @@ void setup() {
   //Serial.print(F("- Setting gas measurement to 320\xC2\xB0\x43 for 150ms\n"));  // "°C" symbols
   BME680.setGas(320, 150);  // 320°C for 150 milliseconds
   
-  setup_wifi();
+  WiFi.begin(ssid, password);
+  connect_wifi();
  
-  secureSocket.setCACert(test_root_ca);
-  mqttClient.setServer(mqtt_server, mqtt_server_port);
-  mqttClient.setCallback(callback);
+  client.begin(host, port, secureSocket);
+  client.onMessage(messageReceived);
 
-  reconnect_mqtt();
+  connect_mqtt();
 
   loopStart = millis();
 }
@@ -280,9 +271,9 @@ void loop() {
 
   if (now % mqtt_poll_interval == 0) 
   {
-    if (!mqttClient.connected())
-      reconnect_mqtt();
-    mqttClient.loop();
+    if (!client.connected())
+      connect_mqtt();
+    client.loop();
   }
   
   if (now % vol_push_interval == 0)
@@ -291,7 +282,7 @@ void loop() {
     if(xQueueReceive(samples_queue, &_Leq_dB, portMAX_DELAY)){
         String tempString = String(_Leq_dB);
         //Serial.println(tempString);
-        publishMessage(_pub_topic_vol, String(_Leq_dB).c_str(), true);
+        publishMessage(_pub_topic_vol, String(_Leq_dB), true);
     }
   }
   
@@ -302,7 +293,7 @@ void loop() {
   }
   
   if (now > (max_awakeTime * 1000) && deepsleep) {
-    mqttClient.disconnect();
+    client.disconnect();
     Serial.println("Going to sleep now");
     Serial.flush();
     esp_deep_sleep_start();

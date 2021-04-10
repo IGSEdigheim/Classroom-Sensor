@@ -1,2 +1,3 @@
-certs*.h
-!certs.h
+cred*.h
+!cred.h
+push.sh

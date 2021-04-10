@@ -1,6 +1,6 @@
 # Classroom-Sensor
 
-Der Classroom-Sensor verwendet einen ESP32-Microcontroller mit integrietem wifi-Modul.
+Der Classroom-Sensor verwendet einen ESP32-Mikrocontroller mit integriertem wifi-Modul.
 
 Mit den drei Sensoren werden die folgenden Umweltwerte gemessen
 * CO₂-Konzentration mit dem MH-Z19
@@ -8,41 +8,41 @@ Mit den drei Sensoren werden die folgenden Umweltwerte gemessen
 * Lautstärke in Dezibel mit dem INMP441-Mikrofon
 sowie zwei Taster, die frei konfiguriert werden können
 
-Die zwei RGB Leuchtdioden und ein Summer dienen als Aktoren.
+Die zwei RGB-Leuchtdioden und ein Summer dienen als Aktoren.
 
-Die Platine wird in einem IKEA Bilderrahmen als Gehäuse untergebracht. Die "Frontblende" kann frei gestaltet werden. Dabei werden die LED integriert.
+Die Platine wird in einem IKEA Bilderrahmen als Gehäuse untergebracht. Die "Frontblende" kann frei gestaltet werden. Dabei werden die LEDs integriert.
+
+[Hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environment?orgId=1&refresh=5s) können die Testdaten betrachtet werden.
+
+In der Datei [cred.h](cred.h) müssen die WLAN-Zugangsdaten und URL/Port des MQTT-Servers eingetragen werden.
 
 ##ToDo
 
-* Die LEDs und die Taster werden im Moment noch nicht angesteuert. Dazu eignet sich die jled Bibliothek.
-* Der Bosch Sensor kann viel mehr wenn man aus den Messwerten die Luftqualität (IAQ) errechnet. Dazu wird eine Vorkompilierte Bibliothek von Bosch benötigt. Siehe dazu [diesen Artikel](http://steinlaus.de/stinkt-das-hier-teil-1-mit-dem-bosch-bme680/).
+* Die LEDs werden im Augenblick noch nicht angesteuert. Dazu eignet sich die [jled](https://github.com/jandelgado/jled#static-on-and-off)-Bibliothek.
+* Die Taster werden noch nicht unterstützt. Man muss [freeRTOS](https://forum.arduino.cc/index.php?topic=674975.0) richtig einsetzen.
+* Der Bosch Sensor kann die Luftqualität (IAQ) errechnen wenn diese [Bibliothek von Bosch](https://github.com/BoschSensortec/BSEC-Arduino-library) eingebunden wird. Siehe dazu [diesen Artikel](http://steinlaus.de/stinkt-das-hier-teil-1-mit-dem-bosch-bme680/).
 
 # Software
 
 ## Verwendete Arduino Bibliotheken
 
 ### Internet
-* [Wifi](https://www.arduino.cc/en/Reference/WiFi)
 * Für die sichere TLS (SSL) Verbindung zum MQTT-Server: [WifiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure)
-* Für das MQTT-Protokoll: [PubSubClient](https://pubsubclient.knolleary.net/)
-* Für die Steuerung der LEDs: [jled](https://github.com/jandelgado/jled#static-on-and-off)
+* Für das MQTT-Protokoll: [arduino-mqtt](https://github.com/256dpi/arduino-mqtt)
 
-### Sensoren
-* [MH-Z19](https://github.com/WifWaf/MH-Z19) von Jonathan Dempsey
-* Derzeit: [BME680](https://github.com/SV-Zanshin/BME680) von SV-Zanshin
+### Sensoren / Aktoren
+* [MH-Z19](https://github.com/WifWaf/MH-Z19)
+* Derzeit: [BME680](https://github.com/SV-Zanshin/BME680)
 * Zukünftig: [BME680](https://github.com/BoschSensortec/BSEC-Arduino-library)
-* [INMP441](https://github.com/ikostoski/esp32-i2s-slm) von Ivan Kostoski
-
-## MQTT
-Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den verschlüsselten Port 8883
-Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environment?orgId=1&refresh=5s) betrachtet werden.
+* [INMP441](https://github.com/ikostoski/esp32-i2s-slm)
+* Zukünftig: Für die Steuerung der LEDs: [jled](https://github.com/jandelgado/jled#static-on-and-off)
 
 
-### Datenfluss
+## Datenfluss
 
 ![Datenfluss](img/Datenfluss.png)
 
-### MQTT-Topics
+## MQTT-Topics
 * igs/environment/deepsleep
 * igs/environment/RAUM_ID/co2
 * igs/environment/RAUM_ID/temp
