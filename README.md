@@ -70,7 +70,7 @@ Dabei Feinstaubsensor handelt es sich um ein total anderes Projekt, dass sich mi
 
 [Datenblatt des Feinstaubsensors](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
 
-#### Bezugquellen
+#### Bezugsquellen
 * Sensor: [AliExpress](https://de.aliexpress.com/item/32606349048.html)
 * Buchse: [AliExpress](https://www.aliexpress.com/item/4000029760504.html)
 * LCSC [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
@@ -83,7 +83,7 @@ Dabei Feinstaubsensor handelt es sich um ein total anderes Projekt, dass sich mi
 Jeder Pin des ESP32 Entwicklungsboards ist auf der Platine herausgeführt.
 Bei Bedarf können zwei [einreihige Pin-Buchsen](https://www.aliexpress.com/item/32970948352.html) (15 Pins pro Seite) aufgelötet werden.
 
-#### Bezugquelle
+#### Bezugsquelle
 * [AliExpress](https://www.aliexpress.com/item/32959541446.html)
 
 ### CO2-Sensor: (MH-Z19)
@@ -95,7 +95,7 @@ Bei Bedarf können zwei [einreihige Pin-Buchsen](https://www.aliexpress.com/item
 ### Umweltsensor (BME680)
 <img src="https://ae01.alicdn.com/kf/H9966c391bc334a649263d5f16d010e0dY.jpg" width="200">
 
-#### Bezugquelle
+#### Bezugsquelle
 * [AliExpress](https://www.aliexpress.com/item/4000049700826.html)
 
 ### Mikrofon (INMP441)
@@ -103,18 +103,18 @@ Bei Bedarf können zwei [einreihige Pin-Buchsen](https://www.aliexpress.com/item
 
 Zur Lärmpegelmessung.
 
-#### Bezugquelle
+#### Bezugsquelle
 * [AliExpress](https://www.aliexpress.com/item/32961274528.html)
 
 ### Summer (Buzzer)
 
-#### Bezugquellen
+#### Bezugsquellen
 * [AliExpress](https://www.aliexpress.com/item/32416854447.html)
 * LCSC: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-12085-16_C2858.html)
 
 ### Taster
 
-#### Bezugquellen
+#### Bezugsquellen
 * [AliExpress](https://de.aliexpress.com/item/4000800019378.html)
 * LCSC: [SKHHNHA010](https://lcsc.com/product-detail/Tactile-Switches_ALPSALPINE-SKHHNHA010_C219779.html)
 
@@ -123,12 +123,12 @@ Zur Lärmpegelmessung.
 Man hat die Wahl zwischen zwei RGB Leuchtdioden mit *gemeinsamer Kathode* oder bis zu 6 einzelnen LEDs. Man kann auch eine RGB LED und 3 einzelne LEDs verwenden.
 Ich rate zu diffusen LEDs, da sich die Farben besser mischen.
 
-#### Bezugquelle
+#### Bezugsquelle
 * [AliExpress](https://de.aliexpress.com/item/32278313170.html)
 
-### Strombuchse
+### Strombuchse für 5V
 
-#### Bezugquelle
+#### Bezugsquelle
 * [AliExpress](https://de.aliexpress.com/item/32730260523.html)
 
 ## Links zu weiteren Projekten
