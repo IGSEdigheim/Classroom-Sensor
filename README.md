@@ -1,13 +1,23 @@
 # Classroom-Sensor
-[Projektseite auf oshwlab.com](https://oshwlab.com/Classroom-Sensor/classroom-sensor)
 
-ESP32 mit Sensoren für CO2, Umwelt (Temp,Hum,Pres) und Lautstärke sowie 2 RGB-LEDs, zwei Taster und ein Summer als Aktoren.
+Der Classroom-Sensor verwendet einen ESP32-Microcontroller mit integrietem wifi-Modul.
+
+Mit den drei Sensoren werden die folgenden Umweltwerte gemessen
+* CO₂-Konzentration
+* Lufttemperatur, Luftfeuchtigkeit und Luftdruck 
+* Lautstärke in Dezibel
+sowie zwei Taster, die frei konfiguriert werden können
+
+Die zwei RGB Leuchtdioden und ein Summer dienen als Aktoren.
+
+Die Platine wird in einem IKEA Bilderrahmen als Gehäuse untergebracht. Die "Frontblende" kann frei gestaltet werden. Dabei werden die LED integriert.
+
+##ToDo
+
+* Die LEDs und die Taster werden im Moment noch nicht angesteuert. Dazu eignet sich die jled Bibliothek.
+* Der Bosch Sensor kann viel mehr wenn man aus den Messwerten die Luftqualität (IAQ) errechnet. Dazu wird eine Vorkompilierte Bibliothek von Bosch benötigt. Siehe dazu [diesen Artikel](http://steinlaus.de/stinkt-das-hier-teil-1-mit-dem-bosch-bme680/).
 
 # Software
-
-## Datenfluss
-
-![Datenfluss](img/Datenfluss.png)
 
 ## Verwendete Arduino Bibliotheken
 
@@ -19,12 +29,18 @@ ESP32 mit Sensoren für CO2, Umwelt (Temp,Hum,Pres) und Lautstärke sowie 2 RGB-
 
 ### Sensoren
 * [MH-Z19](https://github.com/WifWaf/MH-Z19) von Jonathan Dempsey
-* [BME680](https://github.com/SV-Zanshin/BME680) von SV-Zanshin
+* Derzeit: [BME680](https://github.com/SV-Zanshin/BME680) von SV-Zanshin
+* Zukünftig: [BME680](https://github.com/BoschSensortec/BSEC-Arduino-library)
 * [INMP441](https://github.com/ikostoski/esp32-i2s-slm) von Ivan Kostoski
 
-## MQTT-Server
+## MQTT
 Wir verwenden meinen privaten Mosquitto MQTT-Server **fadenstrahl.de** über den verschlüsselten Port 8883
 Die MQTT-Daten können [hier](https://grafana.fadenstrahl.de/d/bWRdm1dMk/environment?orgId=1&refresh=5s) betrachtet werden.
+
+
+### Datenfluss
+
+![Datenfluss](img/Datenfluss.png)
 
 ### MQTT-Topics
 * igs/environment/deepsleep
@@ -40,6 +56,9 @@ Wobei **RAUM_ID** durch eine eindeutige Kennzeichnung des Raumes ersetzt wird. Z
 # Hardware
 
 ## Platine
+
+Auf der zugehörigen [Projektseite auf oshwlab.com](https://oshwlab.com/Classroom-Sensor/classroom-sensor) können Sie den Schaltplan und die Platine bearbeiten und von jlcpcb fertig lassen.
+
 
 ![3D-Ansicht](img/Classroom-Sensor_v2_3D.PNG)
 ![Platine](img/Classroom-Sensor_v2_2D.png)
@@ -86,7 +105,7 @@ Bei Bedarf können zwei [einreihige Pin-Buchsen](https://www.aliexpress.com/item
 #### Bezugsquelle
 * [AliExpress](https://www.aliexpress.com/item/32959541446.html)
 
-### CO2-Sensor: (MH-Z19)
+### CO₂-Sensor: (MH-Z19)
 <img src="https://ae01.alicdn.com/kf/H21416e6fddfb46539fdf563d8bf5ec212.jpg" width="200">
 
 #### Bezugquelle
@@ -136,3 +155,4 @@ Ich rate zu diffusen LEDs, da sich die Farben besser mischen.
 * https://randomnerdtutorials.com/build-an-all-in-one-esp32-weather-station-shield/ 
 * https://github.com/kadamski/dust_sensor 
 * https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise-1
+* http://steinlaus.de/stinkt-das-hier-teil-1-mit-dem-bosch-bme680/
