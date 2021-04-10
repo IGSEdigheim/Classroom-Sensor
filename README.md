@@ -3,9 +3,9 @@
 Der Classroom-Sensor verwendet einen ESP32-Microcontroller mit integrietem wifi-Modul.
 
 Mit den drei Sensoren werden die folgenden Umweltwerte gemessen
-* CO₂-Konzentration
-* Lufttemperatur, Luftfeuchtigkeit und Luftdruck 
-* Lautstärke in Dezibel
+* CO₂-Konzentration mit dem MH-Z19
+* Lufttemperatur, Luftfeuchtigkeit, Luftdruck und Luftqualität (IAQ) mit dem Bosch BME680
+* Lautstärke in Dezibel mit dem INMP441-Mikrofon
 sowie zwei Taster, die frei konfiguriert werden können
 
 Die zwei RGB Leuchtdioden und ein Summer dienen als Aktoren.
