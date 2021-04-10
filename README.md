@@ -96,7 +96,7 @@ LCSC: [SEA-12085-16](https://lcsc.com/product-detail/Buzzers_Made-in-China-SEA-1
 ### [Taster](https://de.aliexpress.com/item/4000800019378.html)
 LCSC: [SKHHNHA010](https://lcsc.com/product-detail/Tactile-Switches_ALPSALPINE-SKHHNHA010_C219779.html)
 
-### RGB-LED (https://de.aliexpress.com/item/32278313170.html)
+### [RGB-LED](https://de.aliexpress.com/item/32278313170.html)
 Man hat die Wahl zwischen zwei RGB Leuchtdioden mit *gemeinsamer Kathode* oder bis zu 6 einzelnen LEDs. Man kann auch eine RGB LED und 3 einzelne LEDs verwenden.
 Ich rate zu diffusen LEDs, da sich die Farben besser mischen.
 
