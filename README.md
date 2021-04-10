@@ -71,7 +71,8 @@ Dabei Feinstaubsensor handelt es sich um ein total anderes Projekt, dass sich mi
 [Datenblatt des Feinstaubsensors](https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf)
 
 #### Bezugquellen
-* [AliExpress](https://www.aliexpress.com/item/4000029760504.html)
+* Sensor: [AliExpress](https://de.aliexpress.com/item/32606349048.html)
+* Buchse: [AliExpress](https://www.aliexpress.com/item/4000029760504.html)
 * LCSC [XH-5AW](https://lcsc.com/product-detail/Wire-To-Board-Wire-To-Wire-Connector_BOOMELE-Boom-Precision-Elec-XH-5AW_C24023.html)
 
 ## Mikrocontroller, Sensoren und Aktoren
@@ -124,6 +125,11 @@ Ich rate zu diffusen LEDs, da sich die Farben besser mischen.
 
 #### Bezugquelle
 * [AliExpress](https://de.aliexpress.com/item/32278313170.html)
+
+### Strombuchse
+
+#### Bezugquelle
+* [AliExpress](https://de.aliexpress.com/item/32730260523.html)
 
 ## Links zu weiteren Projekten
 
