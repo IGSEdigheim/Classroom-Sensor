@@ -16,11 +16,10 @@ Die Platine wird in einem IKEA Bilderrahmen als Gehäuse untergebracht. Die "Fro
 
 In der Datei [cred.h](cred.h) müssen die WLAN-Zugangsdaten und URL/Port des MQTT-Servers eingetragen werden.
 
-##ToDo
+## ToDo
 
 * Die LEDs werden im Augenblick noch nicht angesteuert. Dazu eignet sich die [jled](https://github.com/jandelgado/jled#static-on-and-off)-Bibliothek.
 * Die Taster werden noch nicht unterstützt. Man muss [freeRTOS](https://forum.arduino.cc/index.php?topic=674975.0) richtig einsetzen.
-* Der Bosch Sensor kann die Luftqualität (IAQ) errechnen wenn diese [Bibliothek von Bosch](https://github.com/BoschSensortec/BSEC-Arduino-library) eingebunden wird. Siehe dazu [diesen Artikel](http://steinlaus.de/stinkt-das-hier-teil-1-mit-dem-bosch-bme680/).
 
 # Software
 
@@ -32,8 +31,7 @@ In der Datei [cred.h](cred.h) müssen die WLAN-Zugangsdaten und URL/Port des MQT
 
 ### Sensoren / Aktoren
 * [MH-Z19](https://github.com/WifWaf/MH-Z19)
-* Derzeit: [BME680](https://github.com/SV-Zanshin/BME680)
-* Zukünftig: [BME680](https://github.com/BoschSensortec/BSEC-Arduino-library)
+* [BME680](https://github.com/BoschSensortec/BSEC-Arduino-library)
 * [INMP441](https://github.com/ikostoski/esp32-i2s-slm)
 * Zukünftig: Für die Steuerung der LEDs: [jled](https://github.com/jandelgado/jled#static-on-and-off)
 

@@ -18,38 +18,29 @@ unsigned short max_awakeTime = 5; // Seconds to stay wake before next sleep
 unsigned long  now = 0;
 unsigned long  loopStart = 0;
 unsigned short mqtt_poll_interval = 100;
-unsigned long  mqtt_push_interval = 30000;
+unsigned long  mqtt_push_interval = 15000;
 unsigned short vol_push_interval = 5000;
 
 // Wifi
 #include <WiFiClientSecure.h>
-#include "cred.h"
+#include "cred_p.h"
 WiFiClientSecure secureSocket;
 
 // MQTT
-#include <MQTT.h>
-MQTTClient client;
-String clientId = "IGSE-ESP32-";
-#define _sub_topic_deepsleep "igs/environment/deepsleep"
-#define _pub_topic_co2    "igs/environment/room1/co2"
-#define _pub_topic_temp   "igs/environment/room1/temp"
-#define _pub_topic_hum    "igs/environment/room1/hum"
-#define _pub_topic_pres   "igs/environment/room1/pres"
-#define _pub_topic_gas    "igs/environment/room1/gasresistance"
-#define _pub_topic_vol    "igs/environment/room1/vol"
+#include "mqtt_helper.h"
 
-//MHZ-19 Co2-Sensor
+//MHZ-19 CO₂-Sensor
 #include "MHZ19.h"            //https://github.com/WifWaf/MH-Z19
 MHZ19 myMHZ19;                // Constructor for library
 HardwareSerial mySerial(2);   // (ESP32 Example) create device to MH-Z19 serial
 #define BAUDRATE 9600         // Device to MH-Z19 Serial baudrate (should not be changed)
 
 // BME680
-#include "Zanshin_BME680.h"  // Include the BME680 Sensor library
-BME680_Class BME680;  ///< Create an instance of the BME680 class
+#include "bme680_helper.h"
 
 // INMP441
-#include "slm.h"
+#include "sound_level_meter.h"
+
 
 
 void connect_wifi() {
@@ -58,7 +49,7 @@ void connect_wifi() {
   Serial.println();
   Serial.print("Connecting to ");
   Serial.print(ssid);
-  
+
   byte TryCounter = 0;
   while ((WiFi.status() != WL_CONNECTED) && (TryCounter < 10)) {
     delay(1000);
@@ -71,84 +62,18 @@ void connect_wifi() {
   randomSeed(micros());
 
   Serial.print("\nConnected. IP: ");
-  Serial.println(WiFi.localIP()); 
+  Serial.println(WiFi.localIP());
 }
 
 
-void messageReceived(String &topic, String &payload) {
-  Serial.print("Message arrived on topic: ");
-  Serial.print(topic);
-  Serial.print(". Message: ");
-  String messageTemp;
-  
-  //for (int i = 0; i < length; i++) {
-  //  Serial.print((char)message[i]);
-  //  messageTemp += (char)message[i];
-  //}
-  Serial.println();
 
-  if (String(topic) == _sub_topic_deepsleep) {
-    deepsleep = payload.toInt();
-    if (deepsleep) {
-      esp_sleep_enable_timer_wakeup(deepsleep * 1000000); // sleeptime in microseconds
-      Serial.println("Setup ESP32 to sleep for every " + payload + " Seconds");
-    } else {
-      esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);
-      Serial.println("Setup ESP32 to not perform any deepsleep.");
-    }
-    delay(500);
-  } 
-}
-
-
-void connect_mqtt() {
-  byte TryCounter = 0;
-  // Loop until we're connected
-  while (!client.connected() && (TryCounter < 10))
-  {
-    TryCounter++;
-
-    Serial.print("Attempting MQTT connection");
-    // Create a random client ID
-    clientId += String(random(0xffff), HEX);
-    // Attempt to connect
-    if (client.connect(clientId.c_str())) {
-      Serial.println(" connected");
-      
-      // Subscribe topics
-      if(client.subscribe(_sub_topic_deepsleep)){
-        Serial.print("Subscribed to ");
-      } else {
-        Serial.print("Failed to subscribe to ");
-      }
-      Serial.println(_sub_topic_deepsleep);
-      
-    } else {
-      Serial.print(".");
-      delay(5000);
-    }
-  }
-  if (!client.connected() && (TryCounter > 9))
-    ESP.restart();
-}
-
-
-void publishMessage(String topic, String message, bool retain) {
-  Serial.print("Message sent to topic: ");
-  Serial.print(topic);
-  Serial.print(". Message: ");
-  Serial.println(message);
-  client.publish(topic, message);
-}
-
-
-void measureCO2(){
-  int CO2; 
+void measureCO2() {
+  int CO2;
   int8_t Temp;
 
-  /* note: getCO2() default is command "CO2 Unlimited". This returns the correct CO2 reading even 
-  if below background CO2 levels or above range (useful to validate sensor). You can use the 
-  usual documented command with getCO2(false) */
+  /* note: getCO2() default is command "CO2 Unlimited". This returns the correct CO2 reading even
+    if below background CO2 levels or above range (useful to validate sensor). You can use the
+    usual documented command with getCO2(false) */
 
   CO2 = myMHZ19.getCO2();             // Request CO2 (as ppm)
   Temp = myMHZ19.getTemperature();    // Request Temperature (as Celsius)
@@ -161,11 +86,11 @@ void measureCO2(){
   } else if (CO2 < 1500) {
     digitalWrite(LED2R, LOW);
     digitalWrite(LED2G, LOW);
-    digitalWrite(LED2B, HIGH);    
+    digitalWrite(LED2B, HIGH);
   } else if (CO2 < 2000) {
     digitalWrite(LED2R, LOW);
     digitalWrite(LED2G, HIGH);
-    digitalWrite(LED2B, LOW);    
+    digitalWrite(LED2B, LOW);
   } else {
     digitalWrite(LED2R, HIGH);
     digitalWrite(LED2G, LOW);
@@ -182,36 +107,42 @@ void measureCO2(){
   }
 }
 
+
+
 void measureBME680() {
-  static int32_t  temp, humidity, pressure, gas;  // BME readings
-  BME680.getSensorData(temp, humidity, pressure, gas);   // Get readings
 
-  //Serial.print(F("Temperature = "));
-  //Serial.print(float(temp)/100);
-  //Serial.println(" \xC2\xB0\x43");
-  publishMessage(_pub_topic_temp, String(float(temp)/100), true);
+  if (iaqSensor.run()) { // If new data is available
+    publishMessage(_pub_topic_temp,   String(iaqSensor.temperature), true);
+    publishMessage(_pub_topic_hum,    String(iaqSensor.humidity), true);
+    publishMessage(_pub_topic_pres,   String(iaqSensor.pressure / 100.0), true);
+    publishMessage(_pub_topic_gas,    String(iaqSensor.gasResistance / 1000.0), true);
 
-  //Serial.print(F("Humidity = "));
-  //Serial.print(float(humidity)/1000);
-  //Serial.println(" %");
-  publishMessage(_pub_topic_hum,  String(float(humidity)/1000), true);
-  
-  //Serial.print(F("Pressure = "));
-  //Serial.print(float(pressure)/100);
-  //Serial.println(" hPa");
-  publishMessage(_pub_topic_pres, String(float(pressure)/100), true);
-  
-  //Serial.print(F("Gas Resistance = "));
-  //Serial.print(float(gas)/100);
-  //Serial.println(F(" m\xE2\x84\xA6"));
-  publishMessage(_pub_topic_gas, String(float(gas)/100), true);
-
-  //const float seaLevel = 1013.25;
-  //float altitude = 44330.0 * (1.0 - pow(((float)pressure / 100.0) / seaLevel, 0.1903));  // Convert into meters
-  //Serial.print(F("Altitude = "));
-  //Serial.print(altitude);
-  //Serial.println(" m");
+    if (iaqSensor.iaqAccuracy > 0)
+    {
+      publishMessage(_pub_topic_iaqAcc, String(iaqSensor.iaqAccuracy), true);
+      publishMessage(_pub_topic_iaq,    String(iaqSensor.iaq), true);
+      publishMessage(_pub_topic_siaq,   String(iaqSensor.staticIaq), true);
+      publishMessage(_pub_topic_CO2eq,  String(iaqSensor.co2Equivalent), true);
+      publishMessage(_pub_topic_bVOCeq, String(iaqSensor.breathVocEquivalent), true);
+    }
+    /*
+      String output = "";
+      output += "\ntemp " + String(iaqSensor.temperature) + " °C";
+      output += "\nhum " + String(iaqSensor.humidity) + " %";
+      output += "\npres " + String(iaqSensor.pressure / 100.0) + " hPa";
+      output += "\ngasRes " + String(iaqSensor.gasResistance / 1000.0) + " kΩ";
+      output += "\niaq " + String(iaqSensor.iaq);
+      output += "\niaqAccuracy " + String(iaqSensor.iaqAccuracy); // 3==BSEC calibrated successfully
+      output += "\nstaticIaq " + String(iaqSensor.staticIaq);
+      output += "\nco2Equivalent " + String(iaqSensor.co2Equivalent) + " ppm";
+      output += "\nbreathVocEquivalent " + String(iaqSensor.breathVocEquivalent) + " ppm";
+      Serial.println(output);
+    */
+  } else {
+    checkIaqSensorStatus();
+  }
 }
+
 
 
 void setup() {
@@ -232,33 +163,31 @@ void setup() {
   ++bootCount;
   Serial.println("- Boot number: " + String(bootCount));
 
-  Serial.print(F("- Initializing INMP441 Microphone\n"));
-  samples_queue = xQueueCreate(8, sizeof(sum_queue_t));
-  xTaskCreate(mic_i2s_reader_task, "Mic I2S Reader", I2S_TASK_STACK, NULL, I2S_TASK_PRI, NULL);
+  BaseType_t xReturned = NULL;
+
+  Serial.print(F("- Initializing INMP441 Microphone... "));
+  slm_queue = xQueueCreate(I2S_XQUEUE_SIZE, sizeof(double));
+  xReturned = xTaskCreate(mic_i2s_reader_task, "Mic I2S Reader", I2S_TASK_STACK, NULL, I2S_TASK_PRI, &task_slm);
+  if ( xReturned == pdPASS )
+  {
+    Serial.print(F(" Task created.\n"));
+  } else {
+    Serial.print(F(" Could not create Task!\n"));
+  }
 
   Serial.print(F("- Initializing MHZ-19 CO\xE2\x82\x82 sensor\n")); //  "CO₂" symbol
-  mySerial.begin(BAUDRATE); 
-  myMHZ19.begin(mySerial);                                // *Serial(Stream) refence must be passed to library begin(). 
+  mySerial.begin(BAUDRATE);
+  myMHZ19.begin(mySerial);                                // *Serial(Stream) refence must be passed to library begin().
   myMHZ19.autoCalibration();                              // Turn auto calibration ON (OFF autoCalibration(false))
 
-  Serial.println("- Initializing BME680 sensor");
-  if (!BME680.begin(I2C_STANDARD_MODE)) // Start BME680 using I2C, use first device found
-    Serial.println("Could not find a valid BME680 sensor, check wiring, address, sensor ID!");
-  
-  //Serial.print(F("- Setting 16x oversampling for all sensors\n"));
-  BME680.setOversampling(TemperatureSensor, Oversample16);  // Use enumerated type values
-  BME680.setOversampling(HumiditySensor, Oversample16);     // Use enumerated type values
-  BME680.setOversampling(PressureSensor, Oversample16);     // Use enumerated type values
-  //Serial.print(F("- Setting IIR filter to a value of 4 samples\n"));
-  BME680.setIIRFilter(IIR4);  // Use enumerated type values
-  //Serial.print(F("- Setting gas measurement to 320\xC2\xB0\x43 for 150ms\n"));  // "°C" symbols
-  BME680.setGas(320, 150);  // 320°C for 150 milliseconds
-  
+  Serial.print(F("- Initializing BME680 Environmental Sensor\n"));
+  bme_i2c_init();
+
   WiFi.begin(ssid, password);
   connect_wifi();
- 
-  client.begin(host, port, secureSocket);
-  client.onMessage(messageReceived);
+
+  mqtt_client.begin(host, port, secureSocket);
+  mqtt_client.onMessage(messageReceived);
 
   connect_mqtt();
 
@@ -266,37 +195,40 @@ void setup() {
 }
 
 
+
 void loop() {
   now = millis() - loopStart;
 
-  if (now % mqtt_poll_interval == 0) 
+  if (now % mqtt_poll_interval == 0)
   {
-    if (!client.connected())
+    if (!mqtt_client.connected())
       connect_mqtt();
-    client.loop();
+    mqtt_client.loop();
   }
-  
+
   if (now % vol_push_interval == 0)
   {
     double _Leq_dB;
-    if(xQueueReceive(samples_queue, &_Leq_dB, portMAX_DELAY)){
-        String tempString = String(_Leq_dB);
-        //Serial.println(tempString);
-        publishMessage(_pub_topic_vol, String(_Leq_dB), true);
+    if (xQueueReceive(slm_queue, &_Leq_dB, portMAX_DELAY)) {
+      String tempString = String(_Leq_dB);
+      //Serial.println(String(uxQueueMessagesWaiting(slm_queue)));
+      //Serial.println(String(uxQueueSpacesAvailable(slm_queue)));
+
+      publishMessage(_pub_topic_vol, String(_Leq_dB), true);
     }
   }
-  
+
   if (now % mqtt_push_interval == 0)
   {
     measureCO2();
     measureBME680();
   }
-  
+
   if (now > (max_awakeTime * 1000) && deepsleep) {
-    client.disconnect();
+    mqtt_client.disconnect();
     Serial.println("Going to sleep now");
     Serial.flush();
     esp_deep_sleep_start();
   }
-  
+
 }
