@@ -17,9 +17,11 @@ void bme_i2c_init(void)
   Serial.println(output);
   checkIaqSensorStatus();
 
-  bsec_virtual_sensor_t sensorList[8] = {
+  bsec_virtual_sensor_t sensorList[10] = {
     BSEC_OUTPUT_RAW_PRESSURE,
     BSEC_OUTPUT_RAW_GAS,
+    BSEC_OUTPUT_COMPENSATED_GAS,
+    BSEC_OUTPUT_GAS_PERCENTAGE,
     BSEC_OUTPUT_IAQ,
     BSEC_OUTPUT_STATIC_IAQ,
     BSEC_OUTPUT_CO2_EQUIVALENT,
@@ -28,12 +30,12 @@ void bme_i2c_init(void)
     BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY,
   };
 
-  iaqSensor.updateSubscription(sensorList, 8, BSEC_SAMPLE_RATE_LP);
+  iaqSensor.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);
   checkIaqSensorStatus();
 
   // Print the header
-  output = "Timestamp [ms], temperature [°C], relative humidity [%], pressure [hPa], gas [Ohm], IAQ, IAQ accuracy, Static IAQ, CO2 equivalent, breath VOC equivalent";
-  Serial.println(output);
+  //output = "Timestamp [ms], temperature [°C], relative humidity [%], pressure [hPa], gas [Ohm], IAQ, IAQ accuracy, Static IAQ, CO2 equivalent, breath VOC equivalent";
+  //Serial.println(output);
 }
 
 // Helper function definitions

@@ -68,26 +68,18 @@ void connect_wifi() {
 
 
 void measureCO2() {
-  int CO2;
-  int8_t Temp;
+  int co2 = myMHZ19.getCO2();             // Request CO2 (as ppm)
 
-  /* note: getCO2() default is command "CO2 Unlimited". This returns the correct CO2 reading even
-    if below background CO2 levels or above range (useful to validate sensor). You can use the
-    usual documented command with getCO2(false) */
-
-  CO2 = myMHZ19.getCO2();             // Request CO2 (as ppm)
-  Temp = myMHZ19.getTemperature();    // Request Temperature (as Celsius)
-
-  if (CO2 < 1000)
+  if (co2 < 1000)
   {
     digitalWrite(LED2R, LOW);
     digitalWrite(LED2G, LOW);
     digitalWrite(LED2B, LOW);
-  } else if (CO2 < 1500) {
+  } else if (co2 < 1000) {
     digitalWrite(LED2R, LOW);
     digitalWrite(LED2G, LOW);
     digitalWrite(LED2B, HIGH);
-  } else if (CO2 < 2000) {
+  } else if (co2 < 2000) {
     digitalWrite(LED2R, LOW);
     digitalWrite(LED2G, HIGH);
     digitalWrite(LED2B, LOW);
@@ -97,47 +89,53 @@ void measureCO2() {
     digitalWrite(LED2B, LOW);
   }
 
-  //Serial.println("CO2 (ppm): " + String(CO2));
-  //Serial.println("Temperature (C): " + String(Temp));
-
-  if (CO2 != 0 && CO2 != 5000)
+  if (co2 != 0 && co2 != 5000)
   {
-    publishMessage(_pub_topic_co2, String(CO2), true);
-    //publishMessage(_pub_topic_temp, String(Temp), true);
+    publishMessage("co2", String(co2), true);
   }
 }
 
 
 
 void measureBME680() {
-
   if (iaqSensor.run()) { // If new data is available
-    publishMessage(_pub_topic_temp,   String(iaqSensor.temperature), true);
-    publishMessage(_pub_topic_hum,    String(iaqSensor.humidity), true);
-    publishMessage(_pub_topic_pres,   String(iaqSensor.pressure / 100.0), true);
-    publishMessage(_pub_topic_gas,    String(iaqSensor.gasResistance / 1000.0), true);
+    String output = "";
+    
+    output = "{";
+    output +=  "\"temperature\": " + String(iaqSensor.temperature);// + " °C";
+    output += ",\"humidity\": " + String(iaqSensor.humidity);// + " %";
+    output += ",\"pressure\": " + String(iaqSensor.pressure / 100.0);// + " hPa";
+    output += ",\"gasResistance\": " + String(iaqSensor.gasResistance );// + " Ω";
 
-    if (iaqSensor.iaqAccuracy > 0)
-    {
-      publishMessage(_pub_topic_iaqAcc, String(iaqSensor.iaqAccuracy), true);
-      publishMessage(_pub_topic_iaq,    String(iaqSensor.iaq), true);
-      publishMessage(_pub_topic_siaq,   String(iaqSensor.staticIaq), true);
-      publishMessage(_pub_topic_CO2eq,  String(iaqSensor.co2Equivalent), true);
-      publishMessage(_pub_topic_bVOCeq, String(iaqSensor.breathVocEquivalent), true);
-    }
-    /*
-      String output = "";
-      output += "\ntemp " + String(iaqSensor.temperature) + " °C";
-      output += "\nhum " + String(iaqSensor.humidity) + " %";
-      output += "\npres " + String(iaqSensor.pressure / 100.0) + " hPa";
-      output += "\ngasRes " + String(iaqSensor.gasResistance / 1000.0) + " kΩ";
-      output += "\niaq " + String(iaqSensor.iaq);
-      output += "\niaqAccuracy " + String(iaqSensor.iaqAccuracy); // 3==BSEC calibrated successfully
-      output += "\nstaticIaq " + String(iaqSensor.staticIaq);
-      output += "\nco2Equivalent " + String(iaqSensor.co2Equivalent) + " ppm";
-      output += "\nbreathVocEquivalent " + String(iaqSensor.breathVocEquivalent) + " ppm";
-      Serial.println(output);
-    */
+    output += ",\"iaq\": {";
+    output +=  "\"value\": " + String(iaqSensor.iaq);
+    output += ",\"accuracy\": " + String(iaqSensor.iaqAccuracy); // 3==BSEC calibrated successfully
+    output += "}";
+    
+    output += ",\"staticIaq\": {";
+    output +=  "\"value\": " + String(iaqSensor.staticIaq);
+    output += ",\"accuracy\": " + String(iaqSensor.staticIaqAccuracy);
+    output += "}";
+    
+    output += ",\"co2Equivalent\": {";
+    output +=  "\"value\": " + String(iaqSensor.co2Equivalent);// + " ppm";
+    output += ",\"accuracy\": " + String(iaqSensor.co2Accuracy);
+    output += "}";
+    
+    output += ",\"breathVocEquivalent\": {";
+    output +=  "\"value\": " + String(iaqSensor.breathVocEquivalent);// + " ppm";
+    output += ",\"accuracy\": " + String(iaqSensor.breathVocAccuracy);
+    output += "}";
+          
+    output += ",\"gasPercentage\": {";
+    output +=  "\"value\": " + String(iaqSensor.gasPercentage);// + " %";
+    output += ",\"accuracy\": " + String(iaqSensor.gasPercentageAcccuracy);
+    output += "}";
+    
+    output += "}";
+    
+    publishMessage("bme680",output, true);
+    
   } else {
     checkIaqSensorStatus();
   }
@@ -175,10 +173,10 @@ void setup() {
     Serial.print(F(" Could not create Task!\n"));
   }
 
-  Serial.print(F("- Initializing MHZ-19 CO\xE2\x82\x82 sensor\n")); //  "CO₂" symbol
+  Serial.print(F("- Initializing MHZ-19 CO\xE2\x82\x82 sensor\n"));
   mySerial.begin(BAUDRATE);
-  myMHZ19.begin(mySerial);                                // *Serial(Stream) refence must be passed to library begin().
-  myMHZ19.autoCalibration();                              // Turn auto calibration ON (OFF autoCalibration(false))
+  myMHZ19.begin(mySerial);   // *Serial(Stream) refence must be passed to library begin().
+  myMHZ19.autoCalibration(); // Turn auto calibration ON (OFF autoCalibration(false))
 
   Serial.print(F("- Initializing BME680 Environmental Sensor\n"));
   bme_i2c_init();
@@ -214,7 +212,7 @@ void loop() {
       //Serial.println(String(uxQueueMessagesWaiting(slm_queue)));
       //Serial.println(String(uxQueueSpacesAvailable(slm_queue)));
 
-      publishMessage(_pub_topic_vol, String(_Leq_dB), true);
+      publishMessage("vol", String(_Leq_dB), true);
     }
   }
 

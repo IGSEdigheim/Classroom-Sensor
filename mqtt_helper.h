@@ -1,19 +1,9 @@
 #include <MQTT.h>
-MQTTClient mqtt_client;
-String clientId = "IGSE-ESP32-";
-#define _sub_topic_deepsleep "igs/environment/deepsleep"
-#define _pub_topic_co2    "igs/environment/room1/co2"
-#define _pub_topic_vol    "igs/environment/room1/vol"
+MQTTClient mqtt_client(512);
 
-#define _pub_topic_temp   "igs/environment/room1/temp"
-#define _pub_topic_hum    "igs/environment/room1/hum"
-#define _pub_topic_pres   "igs/environment/room1/pres"
-#define _pub_topic_gas    "igs/environment/room1/gasresistance"
-#define _pub_topic_iaqAcc "igs/environment/room1/iaqaccuracy"
-#define _pub_topic_iaq    "igs/environment/room1/iaq"
-#define _pub_topic_siaq   "igs/environment/room1/siaq"
-#define _pub_topic_CO2eq  "igs/environment/room1/co2eq"
-#define _pub_topic_bVOCeq "igs/environment/room1/bvoceq"
+String clientId = "IGSE-ESP32-";
+String _PRE_TOPIC = "igs/environment/";
+String room = "room1";
 
 void connect_mqtt() {
   byte TryCounter = 0;
@@ -30,12 +20,12 @@ void connect_mqtt() {
       Serial.println(" connected");
 
       // Subscribe topics
-      if (mqtt_client.subscribe(_sub_topic_deepsleep)) {
+      if (mqtt_client.subscribe(_PRE_TOPIC + "deepsleep")) {
         Serial.print("Subscribed to ");
       } else {
         Serial.print("Failed to subscribe to ");
       }
-      Serial.println(_sub_topic_deepsleep);
+      Serial.println(_PRE_TOPIC + "deepsleep");
 
     } else {
       Serial.print(".");
@@ -55,7 +45,7 @@ void messageReceived(String &topic, String &payload) {
 
   Serial.println();
 
-  if (String(topic) == _sub_topic_deepsleep) {
+  if (String(topic) == _PRE_TOPIC + "deepsleep") {
     deepsleep = payload.toInt();
     if (deepsleep) {
       esp_sleep_enable_timer_wakeup(deepsleep * 1000000); // sleeptime in microseconds
@@ -70,8 +60,8 @@ void messageReceived(String &topic, String &payload) {
 
 void publishMessage(String topic, String message, bool retain) {
   Serial.print("Message sent to topic: ");
-  Serial.print(topic);
+  Serial.print(_PRE_TOPIC + room + "/" + topic);
   Serial.print(". Message: ");
   Serial.println(message);
-  mqtt_client.publish(topic, message);
+  mqtt_client.publish(_PRE_TOPIC + room + "/" + topic, message);
 }
