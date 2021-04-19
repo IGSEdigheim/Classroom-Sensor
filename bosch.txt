@@ -1,0 +1,36 @@
+/home/USERNAME/snap/arduino/50/.arduino15/packages/esp32/hardware/esp32/1.0.4
+
+add below line 62:
+compiler.libraries.ldflags=
+
+in line 78 add:
+{compiler.libraries.ldflags}
+before:
+-Wl,--end-group -Wl,-EL -o "{build.path}/{build.project_name}.elf"
+
+
+
+
+Explanation on static IAQ, breath VOC and CO2 equivalent
+Below are some more details about the different outputs you listed, hopefully that will help you pick the best solution for your application:
+
+Static IAQ:
+The main difference between IAQ and static IAQ (sIAQ) relies in the scaling factor calculated based on the recent sensor history. The sIAQ output has been optimized for stationary applications (e.g. fixed indoor devices) whereas the IAQ output is ideal for mobile application (e.g. carry-on devices).
+
+bVOCeq estimate:
+The breath VOC equivalent output (bVOCeq) estimates the total VOC concentration [ppm] in the environment. It is calculated based on the sIAQ output and derived from lab tests.
+
+CO2eq estimate:
+Estimates a CO2-equivalent (CO2eq) concentration [ppm] in the environment. It is also calculated based on the sIAQ output and derived from VOC measurements and correlation from field studies.
+
+Since bVOCeq and CO2eq are based on the sIAQ output, they are expected to perform optimally in stationnary applications where the main source of VOCs in the environment comes from human activity (e.g. in a bedroom).
+
+
+The IAQ accuracy is reflecting the current state of the background calibration process, such as:
+
+IAQ Accuracy=0 could either mean:
+BSEC was just started, and the sensor is stabilizing (this lasts normally 5min in LP mode or 20min in ULP mode),
+there was a timing violation (i.e. BSEC was called too early or too late), which should be indicated by a warning/error flag by BSEC,
+IAQ Accuracy=1 means the background history of BSEC is uncertain. This typically means the gas sensor data was too stable for BSEC to clearly define its references,
+IAQ Accuracy=2 means BSEC found a new calibration data and is currently calibrating,
+IAQ Accuracy=3 means BSEC calibrated successfully.
