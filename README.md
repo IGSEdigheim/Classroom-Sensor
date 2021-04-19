@@ -43,10 +43,7 @@ In der Datei [cred.h](cred.h) müssen die WLAN-Zugangsdaten und URL/Port des MQT
 ## MQTT-Topics
 * igs/environment/deepsleep
 * igs/environment/RAUM_ID/co2
-* igs/environment/RAUM_ID/temp
-* igs/environment/RAUM_ID/hum
-* igs/environment/RAUM_ID/pres
-* igs/environment/RAUM_ID/gasresistance
+* igs/environment/RAUM_ID/bme680
 * igs/environment/RAUM_ID/vol
 
 Wobei **RAUM_ID** durch eine eindeutige Kennzeichnung des Raumes ersetzt wird. Zu Testzwecken verwende ich *raum1* und *raum2*.
