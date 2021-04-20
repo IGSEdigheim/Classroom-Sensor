@@ -18,23 +18,18 @@ In der Datei [cred.h](cred.h) müssen die WLAN-Zugangsdaten und URL/Port des MQT
 
 ## ToDo
 
-* Die LEDs werden im Augenblick noch nicht angesteuert. Dazu eignet sich die [jled](https://github.com/jandelgado/jled#static-on-and-off)-Bibliothek.
-* Die Taster werden noch nicht unterstützt. Man muss [freeRTOS](https://forum.arduino.cc/index.php?topic=674975.0) richtig einsetzen.
+* Die Taster werden im Augenblick noch nicht abgefragt. Ein [freeRTOS](https://forum.arduino.cc/index.php?topic=674975.0)-Task könnte das erledigen.
 
 # Software
 
 ## Verwendete Arduino Bibliotheken
 
-### Internet
-* Für die sichere TLS (SSL) Verbindung zum MQTT-Server: [WifiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure)
-* Für das MQTT-Protokoll: [arduino-mqtt](https://github.com/256dpi/arduino-mqtt)
-
-### Sensoren / Aktoren
-* [MH-Z19](https://github.com/WifWaf/MH-Z19)
-* [BME680](https://github.com/BoschSensortec/BSEC-Arduino-library)
-* [INMP441](https://github.com/ikostoski/esp32-i2s-slm)
-* Zukünftig: Für die Steuerung der LEDs: [jled](https://github.com/jandelgado/jled#static-on-and-off)
-
+* [WifiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure) für TLS
+* [arduino-mqtt](https://github.com/256dpi/arduino-mqtt) für das MQTT-Protokoll
+* [MH-Z19](https://github.com/WifWaf/MH-Z19) für den CO₂-Sensor
+* [BME680](https://github.com/BoschSensortec/BSEC-Arduino-library) um die volle Funktionalität des Bosch BME680 auszuschöpfen
+* Aus [INMP441](https://github.com/ikostoski/esp32-i2s-slm) entstammt die [sound_level_meter.h](sound_level_meter.h) ursprünglich (Aus den Rohdaten des Mikrofons die Lautstärke zu berechnen ist anspruchsvoll).
+* [jled](https://github.com/jandelgado/jled#static-on-and-off) um die LEDs einfach anzusteuern
 
 ## Datenfluss
 

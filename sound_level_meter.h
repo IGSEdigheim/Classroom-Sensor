@@ -45,7 +45,7 @@
 // Configuration
 //
 
-#define LEQ_PERIOD        5           // second(s)
+#define LEQ_PERIOD        2           // second(s)
 #define WEIGHTING         C_weighting // Also avaliable: 'C_weighting' or 'None' (Z_weighting)
 //#define LEQ_UNITS         "LAeq"      // customize based on above weighting used
 //#define DB_UNITS          "dBA"       // customize based on above weighting used
@@ -251,9 +251,15 @@ void mic_i2s_init() {
     data_out_num: -1, // not used
     data_in_num:  I2S_SD   
   };
-
-  i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
-
+  
+  esp_err_t err;
+  
+  err = i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
+  if (err != ESP_OK) {
+    Serial.printf("Failed installing driver: %d\n", err);
+    while (true);
+  }
+  
   #if (MIC_TIMING_SHIFT > 0) 
     // Undocumented (?!) manipulation of I2S peripheral registers
     // to fix MSB timing issues with some I2S microphones
@@ -261,8 +267,11 @@ void mic_i2s_init() {
     REG_SET_BIT(I2S_CONF_REG(I2S_PORT), I2S_RX_MSB_SHIFT);  
   #endif
   
-  i2s_set_pin(I2S_PORT, &pin_config);
-
+  err = i2s_set_pin(I2S_PORT, &pin_config);
+  if (err != ESP_OK) {
+    Serial.printf("Failed setting pin: %d\n", err);
+    while (true);
+  }
   //FIXME: There is a known issue with esp-idf and sampling rates, see:
   //       https://github.com/espressif/esp-idf/issues/2634
   //       In the meantime, the below line seems to set sampling rate at ~47999.992Hz
@@ -353,6 +362,9 @@ void mic_i2s_reader_task(void* parameter) {
     Leq_sum_sqr += q.sum_sqr_weighted;
     Leq_samples += SAMPLES_SHORT;
 
+    //Serial.printf("Leq_sum_sqr: %.1f\n", Leq_sum_sqr); -> -inf
+    //Serial.printf("Leq_samples: %.1u\n", Leq_samples);
+
     // When we gather enough samples, calculate new Leq value
     if (Leq_samples >= SAMPLE_RATE * LEQ_PERIOD) {
       double Leq_RMS = sqrt(Leq_sum_sqr / Leq_samples);
@@ -361,6 +373,7 @@ void mic_i2s_reader_task(void* parameter) {
       Leq_samples = 0;
       
       // Serial output, customize (or remove) as needed
+      //Serial.printf("%.1f\n", Leq_RMS);
       //Serial.printf("%.1f\n", Leq_dB);
 
       // Debug only
