@@ -54,6 +54,9 @@ Auf der zugehörigen [Projektseite auf oshwlab.com](https://oshwlab.com/Classroo
 ![Platine](img/Classroom-Sensor_v2_2D.png)
 ![Schaltskizze](img/Classroom-Sensor_v2_Schematic.png)
 
+* Widerstände:
+R1 = 100, R2 = 120, R3 = 47, R4 = 100, R5 = 120, R6 = 47, R7 = 10k, R8 = 10k
+
 * Außenmaß:
 Die Innenmaße des [Ikea Rahmens Ribba 10x15](https://www.ikea.com/de/de/p/ribba-rahmen-weiss-50378410/) definieren den Umriss der Platine (152.5mm x 102.6mm).
 Die Löcher (3,2mm) sind dafür da um optional den Feinstaubsensor auf die Rückseite der Platine anzuschrauben.
