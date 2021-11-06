@@ -1,14 +1,18 @@
 # Classroom-Sensor
 
-Der Classroom-Sensor verwendet einen ESP32-Mikrocontroller mit integriertem wifi-Modul.
+Der Classroom-Sensor verwendet einen ESP32-Mikrocontroller mit integriertem wifi-Modul. 
+
+Durch den Einsatz von FreeRTOS Tasks werden die einzelnen Bestandteile des Programms entkoppelt.
+Der Wifi-Task zum Beispiel, ist dafür zuständig, die wifi-Verbindung neu aufzubauen, falls sie abgebrochen wurde. Der Rest des Programms funktioniert aber mit und ohne wifi.
 
 Mit den drei Sensoren werden die folgenden Umweltwerte gemessen
 * CO₂-Konzentration mit dem MH-Z19
 * Lufttemperatur, Luftfeuchtigkeit, Luftdruck und Luftqualität (IAQ) mit dem Bosch BME680
 * Lautstärke in Dezibel mit dem INMP441-Mikrofon
-sowie zwei Taster, die frei konfiguriert werden können
 
-Die zwei RGB-Leuchtdioden und ein Summer dienen als Aktoren.
+Die beiden RGB-Leuchtdioden zeigen die Lautstärke und den CO2-Wert optisch an. Ein Summer kann zusätzlich ein akkustisches Feedback geben. Die beiden Taster können noch frei konfiguriert werden.
+
+Alle Teile des Programms kommunizieren über FreeRTOS-Queues miteinander und funktionieren dadurch vollkommen asynchron. Der Button-Task sendet zum Beispiel eine Nachricht wenn ein Taster gedrückt oder losgelassen wurde. 
 
 Die Platine wird in einem IKEA Bilderrahmen als Gehäuse untergebracht. Die "Frontblende" kann frei gestaltet werden. Dabei werden die LEDs integriert.
 
@@ -18,7 +22,9 @@ In der Datei [cred.h](cred.h) müssen die WLAN-Zugangsdaten und URL/Port des MQT
 
 ## ToDo
 
-* Die Taster werden im Augenblick noch nicht abgefragt. Ein [freeRTOS](https://forum.arduino.cc/index.php?topic=674975.0)-Task könnte das erledigen.
+* Die Taster und der Summer funktionieren aber haben noch keine Funktion.
+* Die BSEC Lib funktioniert nicht zuverlässig und wurde wieder entfernt. Der bme680 wird im Augenblick nicht ausgelesen.
+* Die jled Bibliothek wird im Augenblick nicht verwendet. Ein LED-Task mitsamt Queue wird kommen.
 
 # Software
 
