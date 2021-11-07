@@ -300,7 +300,7 @@ static TaskHandle_t task_slm;
 //
 // FreeRTOS priority and stack size (in 32-bit words) 
 #define I2S_TASK_PRI   2
-#define I2S_TASK_STACK (1024 * 2) // ok
+#define I2S_TASK_STACK (1024 * 3)
 #define I2S_XQUEUE_SIZE 1
 
 //

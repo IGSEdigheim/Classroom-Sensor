@@ -2,7 +2,7 @@
 #define BTN2 34
 
 unsigned long button_interval = 10;
-unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+unsigned long debounceDelay = 50;
 
 // FreeRTOS Queue
 QueueHandle_t button_queue = NULL;
@@ -11,7 +11,7 @@ QueueHandle_t button_queue = NULL;
 // FreeRTOS Task
 static TaskHandle_t task_button;
 #define BUTTON_TASK_PRI   4
-#define BUTTON_TASK_STACK 1024 // ok
+#define BUTTON_TASK_STACK (1024 * 3)
 
 struct btn_msg_t {
   int button;
@@ -22,8 +22,8 @@ int button1State;
 int button2State;
 int lastButton1State = HIGH;
 int lastButton2State = HIGH;
-unsigned long lastDebounceTimeBtn1 = 0;  // the last time the output pin was toggled
-unsigned long lastDebounceTimeBtn2 = 0;  // the last time the output pin was toggled
+unsigned long lastDebounceTimeBtn1 = 0;
+unsigned long lastDebounceTimeBtn2 = 0;
 
 
 
@@ -40,8 +40,6 @@ void button_task(void* parameter) {
   button_init();
   
   for( ;; ) {
-    //Serial.println(": Button Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
-
     btn_msg_t reading1;
     reading1.button = 1;
     btn_msg_t reading2;
@@ -56,11 +54,12 @@ void button_task(void* parameter) {
         lastDebounceTimeBtn2 = millis();
     
     if ((millis() - lastDebounceTimeBtn1) > debounceDelay) {
-  
+      
       // if the button state has changed:
       if (reading1.value != button1State) {
         button1State = reading1.value;
-  
+        //Serial.println(": Button Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
+        
         if (reading1.value == LOW) {
           Serial.println(": Button 1 pressed");
         } else {

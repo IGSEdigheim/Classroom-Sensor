@@ -10,16 +10,16 @@ QueueHandle_t bme_queue = NULL;
 // FreeRTOS Task
 static TaskHandle_t task_bme;
 #define BME_TASK_PRI   4
-#define BME_TASK_STACK (1024 * 2) // ok
+#define BME_TASK_STACK (1024 * 3)
 
 struct bme_msg_t {
-  int32_t temperature;              ///< BME680 temperature value
-  int32_t humidity;                 ///< BME680 humidity value
-  int32_t pressure;                 ///< BME680 pressure value
-  int32_t gas;                      ///< BME680 gas resistance value
+  int32_t temperature;
+  int32_t humidity;
+  int32_t pressure;
+  int32_t gas;
 };
 
-BME680_Class BME680;                   ///< Create an instance of the BME680 class
+BME680_Class BME680;
 
 
 
@@ -54,12 +54,3 @@ void bme_task(void* parameter) {
     delay( bme_interval );
   }
 }
-
-    /*
-    String jsonData;
-    jsonData = "{ \"temperature\": "   + String(bme_msg.temperature / 100.0)  +
-               ", \"humidity\": "      + String(bme_msg.humidity    / 1000.0) +
-               ", \"pressure\": "      + String(bme_msg.pressure    / 100.0)  + 
-             //", \"Altitude\": "      + String(altitude)                     +
-               ", \"gasResistance\": " + String(bme_msg.gas                )  + " }";
-    */

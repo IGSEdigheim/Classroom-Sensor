@@ -3,7 +3,6 @@
 // JLed multi LED demo. control multiple LEDs in-sync.
 // Copyright (c) 2017-2021 by Jan Delgado. All rights reserved.
 // https://github.com/jandelgado/jled
-#include <jled.h>
 
 #define LED1B 12
 #define LED1G 14

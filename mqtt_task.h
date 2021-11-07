@@ -3,14 +3,14 @@ MQTTClient mqtt_client;
 
 String clientId = "IGSE-ESP32-";
 String _PRE_TOPIC = "igs/environment/";
-String room = "room1";
+String room = "room262";
 
-unsigned long mqtt_poll_interval = 500;
+unsigned long mqtt_poll_interval = 5000;
 
 // FreeRTOS Task
 static TaskHandle_t task_mqtt;
 #define MQTT_TASK_PRI   4
-#define MQTT_TASK_STACK (1024 * 5) // ok
+#define MQTT_TASK_STACK (1024 * 6)
 
 
 
@@ -83,7 +83,6 @@ void mqtt_task(void* parameter) {
   
   mqtt_client.begin(host, port, secureSocket);
   mqtt_client.onMessage(messageReceived);
-  //vTaskDelay( 5000 / portTICK_PERIOD_MS );
   
   for( ;; ) {
     //Serial.println(": MQTT Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));

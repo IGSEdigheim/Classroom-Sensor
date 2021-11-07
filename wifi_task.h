@@ -6,7 +6,7 @@ unsigned long wifi_reconnect_interval = 5000;
 // FreeRTOS Task
 static TaskHandle_t task_wifi;
 #define WIFI_TASK_PRI   4
-#define WIFI_TASK_STACK (1024 * 4) // ok
+#define WIFI_TASK_STACK (1024 * 4)
 
 
 
@@ -29,7 +29,6 @@ void wifi_task(void* parameter) {
   String taskMessage = "+ Wifi-Task running on core ";
   taskMessage = taskMessage + xPortGetCoreID();
   Serial.println(taskMessage);
-  
   
   for( ;; ) {
     //Serial.println(": Wifi Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));

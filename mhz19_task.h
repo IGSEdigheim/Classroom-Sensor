@@ -12,7 +12,7 @@ QueueHandle_t mhz19_queue = NULL;
 // FreeRTOS Task
 static TaskHandle_t task_mhz19;
 #define MHZ19_TASK_PRI   4
-#define MHZ19_TASK_STACK (1024 * 2) // ok
+#define MHZ19_TASK_STACK (1024 * 3)
 
 
 

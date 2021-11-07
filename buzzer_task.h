@@ -1,5 +1,5 @@
 #define BUZZER_PIN 26
-#define TONE_CHANNEL 0 // 15
+#define TONE_CHANNEL 8
 
 #include "pitches.h"
 
@@ -12,7 +12,7 @@ QueueHandle_t buzzer_queue = NULL;
 // FreeRTOS Task
 static TaskHandle_t task_buzzer;
 #define BUZZER_TASK_PRI   4
-#define BUZZER_TASK_STACK 1024 //ok
+#define BUZZER_TASK_STACK (1024 * 3)
 
 struct tone_msg_t {
   unsigned int frequency;
@@ -50,10 +50,10 @@ void buzzer_task(void* parameter) {
   pinMode(BUZZER_PIN, OUTPUT);
   
   for( ;; ) {
-    //Serial.println(": Buzzer Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
-
     tone_msg_t tone_msg;
     if (xQueueReceive(buzzer_queue, &tone_msg, 0) == pdPASS) {
+      //Serial.println(": Buzzer Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
+      
       int noteDuration = 1000 / tone_msg.duration;
       tone(BUZZER_PIN, tone_msg.frequency, noteDuration);
       int pauseBetweenNotes = noteDuration * 1.30;

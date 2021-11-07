@@ -23,7 +23,6 @@ In der Datei [cred.h](cred.h) müssen die WLAN-Zugangsdaten und URL/Port des MQT
 ## ToDo
 
 * Die Taster und der Summer funktionieren aber haben noch keine Funktion.
-* Die jled Bibliothek wird im Augenblick nicht verwendet und der LED-Task ist noch nicht implementiert.
 
 # Software
 
