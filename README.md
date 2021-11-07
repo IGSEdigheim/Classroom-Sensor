@@ -7,7 +7,7 @@ Der Wifi-Task zum Beispiel, ist dafür zuständig, die wifi-Verbindung neu aufzu
 
 Mit den drei Sensoren werden die folgenden Umweltwerte gemessen
 * CO₂-Konzentration mit dem MH-Z19
-* Lufttemperatur, Luftfeuchtigkeit, Luftdruck und Luftqualität (IAQ) mit dem Bosch BME680
+* Lufttemperatur, Luftfeuchtigkeit, Luftdruck und Luftwiderstand mit dem Bosch BME680
 * Lautstärke in Dezibel mit dem INMP441-Mikrofon
 
 Die beiden RGB-Leuchtdioden zeigen die Lautstärke und den CO2-Wert optisch an. Ein Summer kann zusätzlich ein akkustisches Feedback geben. Die beiden Taster können noch frei konfiguriert werden.
