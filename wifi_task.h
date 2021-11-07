@@ -6,7 +6,7 @@ unsigned long wifi_reconnect_interval = 5000;
 // FreeRTOS Task
 static TaskHandle_t task_wifi;
 #define WIFI_TASK_PRI   4
-#define WIFI_TASK_STACK 4096 //4096+2048
+#define WIFI_TASK_STACK (1024 * 4) // ok
 
 
 
@@ -32,7 +32,7 @@ void wifi_task(void* parameter) {
   
   
   for( ;; ) {
-    //Serial.println(": Wifi Remaining Stack" + String(uxTaskGetStackHighWaterMark( NULL )));
+    //Serial.println(": Wifi Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
     connect_wifi();
     delay( wifi_reconnect_interval );
   }  

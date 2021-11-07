@@ -12,7 +12,7 @@ QueueHandle_t buzzer_queue = NULL;
 // FreeRTOS Task
 static TaskHandle_t task_buzzer;
 #define BUZZER_TASK_PRI   4
-#define BUZZER_TASK_STACK 1024
+#define BUZZER_TASK_STACK 1024 //ok
 
 struct tone_msg_t {
   unsigned int frequency;
@@ -50,7 +50,7 @@ void buzzer_task(void* parameter) {
   pinMode(BUZZER_PIN, OUTPUT);
   
   for( ;; ) {
-    //Serial.println(": Buzzer Remaining Stack" + String(uxTaskGetStackHighWaterMark( NULL )));
+    //Serial.println(": Buzzer Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
 
     tone_msg_t tone_msg;
     if (xQueueReceive(buzzer_queue, &tone_msg, 0) == pdPASS) {

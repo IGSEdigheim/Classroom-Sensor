@@ -1,26 +1,16 @@
 #include <MQTT.h>
-MQTTClient mqtt_client(512);
+MQTTClient mqtt_client;
 
 String clientId = "IGSE-ESP32-";
 String _PRE_TOPIC = "igs/environment/";
-String room = "room262";
+String room = "room1";
 
 unsigned long mqtt_poll_interval = 500;
-
-// FreeRTOS Queue
-QueueHandle_t mqtt_queue = NULL;
-#define MQTT_XQUEUE_SIZE 1
 
 // FreeRTOS Task
 static TaskHandle_t task_mqtt;
 #define MQTT_TASK_PRI   4
-#define MQTT_TASK_STACK 5000
-
-struct mqtt_msg_t {
-  String topic;
-  String message;
-  bool retain;
-};
+#define MQTT_TASK_STACK (1024 * 5) // ok
 
 
 
@@ -36,6 +26,7 @@ void connect_mqtt(void) {
     if (mqtt_client.connect(clientId.c_str())) {
       Serial.println("+ MQTT connected");
 
+      /*
       // Subscribe topics
       if (mqtt_client.subscribe(_PRE_TOPIC + "deepsleep")) {
         Serial.print("+ Subscribed to ");
@@ -43,7 +34,7 @@ void connect_mqtt(void) {
         Serial.print("- Failed to subscribe to ");
       }
       Serial.println(_PRE_TOPIC + "deepsleep");
-
+      */
     }    
   }
 }
@@ -95,16 +86,11 @@ void mqtt_task(void* parameter) {
   //vTaskDelay( 5000 / portTICK_PERIOD_MS );
   
   for( ;; ) {
-    //Serial.println(": MQTT Remaining Stack" + String(uxTaskGetStackHighWaterMark( NULL )));
+    //Serial.println(": MQTT Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
     connect_mqtt();
     
     if ((WiFi.status() == WL_CONNECTED) && mqtt_client.connected()) {
       mqtt_client.loop();
-    }
-
-    mqtt_msg_t pub_msg;
-    if (xQueueReceive(mqtt_queue, &pub_msg, 0) == pdPASS) {
-      publishMessage(pub_msg.topic, pub_msg.message, pub_msg.retain);
     }
     delay( mqtt_poll_interval );
   }  

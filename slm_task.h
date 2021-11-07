@@ -45,7 +45,7 @@
 // Configuration
 //
 
-#define LEQ_PERIOD        1           // second(s)
+#define LEQ_PERIOD        2           // second(s)
 #define WEIGHTING         C_weighting // Also avaliable: 'C_weighting' or 'None' (Z_weighting)
 //#define LEQ_UNITS         "LAeq"      // customize based on above weighting used
 //#define DB_UNITS          "dBA"       // customize based on above weighting used
@@ -300,7 +300,7 @@ static TaskHandle_t task_slm;
 //
 // FreeRTOS priority and stack size (in 32-bit words) 
 #define I2S_TASK_PRI   2
-#define I2S_TASK_STACK 1536
+#define I2S_TASK_STACK (1024 * 2) // ok
 #define I2S_XQUEUE_SIZE 1
 
 //
@@ -320,7 +320,7 @@ void mic_i2s_reader_task(void* parameter) {
   double Leq_sum_sqr = 0;
   double Leq_dB = 0;
   while (true) {
-    //Serial.println(": SLM Remaining Stack" + String(uxTaskGetStackHighWaterMark( NULL )));
+    //Serial.println(": SLM Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
     
     // Block and wait for microphone values from I2S
     //

@@ -11,7 +11,7 @@ QueueHandle_t button_queue = NULL;
 // FreeRTOS Task
 static TaskHandle_t task_button;
 #define BUTTON_TASK_PRI   4
-#define BUTTON_TASK_STACK 1024
+#define BUTTON_TASK_STACK 1024 // ok
 
 struct btn_msg_t {
   int button;
@@ -26,6 +26,7 @@ unsigned long lastDebounceTimeBtn1 = 0;  // the last time the output pin was tog
 unsigned long lastDebounceTimeBtn2 = 0;  // the last time the output pin was toggled
 
 
+
 void button_init(void) {
   pinMode(BTN1, INPUT_PULLUP);
   pinMode(BTN2, INPUT_PULLUP);
@@ -37,8 +38,9 @@ void button_task(void* parameter) {
   Serial.println(taskMessage);
   
   button_init();
+  
   for( ;; ) {
-    //Serial.println(": Button Remaining Stack" + String(uxTaskGetStackHighWaterMark( NULL )));
+    //Serial.println(": Button Remaining Stack " + String(uxTaskGetStackHighWaterMark( NULL )));
 
     btn_msg_t reading1;
     reading1.button = 1;
